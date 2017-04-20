@@ -1,0 +1,15 @@
+/**
+ * Created by war3_2 on 2017/4/19.
+ */
+// 商品品牌
+var mongoose = require('../connection_junedb.js');
+
+var BrandSchema = new mongoose.Schema({
+    brand_id : { type: Number},                    //自增id号
+    brand_name: {type: String},                        //品牌名称
+    brand_desc : { type: String},                  //品牌描述
+    sort_order: {type: Number},                        //品牌在前台页面的显示顺序,数字越大越靠后
+    is_show: {type: Number}                        //该品牌是否显示;0否1显示
+});
+
+module.exports = mongoose.model('Brand',BrandSchema);
