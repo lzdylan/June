@@ -18,8 +18,18 @@ export default {
         login, index
     },
     methods: {
-        loginin() {
-            this.compon = 'index';
+        loginin(formItem) {
+            let _this = this;
+            this.axios.get('/api/login')
+                .then(function (response) {
+                    this.axios.post('/api/login', {'user_name': formItem.username, 'password': formItem.userpwd});
+                    console.log('saved successfully');
+                    _this.compon = response.data.compon;
+                    console.log(_this.compon);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         }
     }
 };

@@ -13,5 +13,20 @@ var UserSchema = new Schema({
     userage: {type: Number},                        //年龄
     logindate : { type: Date}                       //最近登录时间
 });
+UserSchema.pre('save', function (next) {
+    if(this.isNew) {
+        this.logindate = Date.now();
+    }else {
 
+    }
+    next();
+})
+UserSchema.statics = {
+    fetch: function (cb) {
+        return this
+            .find({})
+            .sort('username')
+            exec(cb)
+    }
+}
 module.exports = mongoose.model('User',UserSchema);

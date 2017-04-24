@@ -1,7 +1,7 @@
 <template>
     <div id="login">
         <Form :model="formItem">
-            <Form-item label="用户名：" :label-width="60">
+            <Form-item label="用户名：" :model="formItem" :label-width="60">
                 <Input type="text" v-model="formItem.username" placeholder="请输入用户名"></Input>
             </Form-item>
             <Form-item label="密码：" :label-width="60">
@@ -29,7 +29,7 @@
         },
         methods: {
             loginin() {
-                this.$emit('loginin');
+                this.$emit('loginin', this.formItem);
             }
         }
     };
