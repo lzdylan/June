@@ -23,10 +23,13 @@ apiRouters.post('/login', function (request, response) {
         }
         else {
             console.log("Res:" + res);
-            if (request.body.userpwd === res.password) {
+            console.log(request.body.password);
+            console.log(res[0].password);
+            if (request.body.password === res[0].password) {
                 response.json({
                     errno: 0,
                     logObject: res,
+                    gaga:request.body,
                     compon: 'index'
                 })
             }

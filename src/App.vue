@@ -20,10 +20,10 @@ export default {
     methods: {
         loginin(formItem) {
             let _this = this;
-            this.axios.get('/api/login')
+            this.axios.post('/api/login', {'user_name': formItem.user_name, 'password': formItem.password})
                 .then(function (response) {
-                    this.axios.post('/api/login', {'user_name': formItem.username, 'password': formItem.userpwd});
                     console.log('saved successfully');
+                    console.log(response.data.gaga);
                     _this.compon = response.data.compon;
                     console.log(_this.compon);
                 })

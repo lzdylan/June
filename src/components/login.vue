@@ -2,10 +2,10 @@
     <div id="login">
         <Form :model="formItem">
             <Form-item label="用户名：" :model="formItem" :label-width="60">
-                <Input type="text" v-model="formItem.username" placeholder="请输入用户名"></Input>
+                <Input type="text" v-model="formItem.user_name" placeholder="请输入用户名"></Input>
             </Form-item>
             <Form-item label="密码：" :label-width="60">
-                <Input type="password" v-model="formItem.userpwd" placeholder="请输入密码"></Input>
+                <Input type="password" v-model="formItem.password" placeholder="请输入密码"></Input>
             </Form-item>
             <Form-item>
                 <Button style="width:100%" @click="loginin" type="primary">登录</Button>
@@ -18,8 +18,8 @@
         data() {
             return {
                 formItem: {
-                    username: '',
-                    userpwd: ''
+                    user_name: '',
+                    password: ''
                 }
             };
         },
