@@ -12,7 +12,7 @@
                 </template>
                 <Menu-item name="2-1"><router-link tag="span" to="/">商品列表</router-link></Menu-item>
                 <Menu-item name="2-2"><router-link tag="span" to="/">商品分类</router-link></Menu-item>
-                <Menu-item name="2-3"><router-link tag="span" to="/">商品类型</router-link></Menu-item>
+                <Menu-item name="2-3"><router-link tag="span" to="/goodsType">商品类型</router-link></Menu-item>
                 <Menu-item name="2-4"><router-link tag="span" to="/">商品编辑</router-link></Menu-item>
             </Submenu>
             <Submenu name="3">

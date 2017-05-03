@@ -5,7 +5,6 @@
 var mongoose = require('../connection_junedb.js');
 
 var GoodsSchema = new mongoose.Schema({
-    goods_id: 	{type: Number}, 	 //商品id
     cat_id: 	{type: Number}, 	 //商品所属商品分类id，取值category的cat_id
     goods_sn: 	{type: Number},	 //商品的唯一货号
     goods_name: 	{type: String},	 //商品的名称

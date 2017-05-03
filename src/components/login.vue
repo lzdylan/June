@@ -29,7 +29,14 @@
         },
         methods: {
             loginin() {
-                this.$emit('loginin', this.formItem);
+                let _this = this;
+                this.axios.post('/api/login', {'user_name': this.formItem.user_name, 'password': this.formItem.password})
+                        .then(function (response) {
+                            _this.$router.push('/index');
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
             }
         }
     };

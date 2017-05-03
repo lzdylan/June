@@ -17,7 +17,6 @@
                 <div id="sales_overview"></div>
             </div>
         </div>
-
     </div>
 </template>
 <script type="text/ecmascript-6">
