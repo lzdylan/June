@@ -43,12 +43,12 @@
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
     #login
-        background -webkit-gradient(linear, 0 0, 0 bottom, from(#4c84cc), to(#3ea6eb))!important
+        background -webkit-gradient(linear, 0 0, 0 bottom, from(#8E9BB9), to(#464c5b))!important
         display flex
         justify-content center
         align-items center
         form
-            border 1px solid #3ea6eb
+            border 1px solid #464c5b
             border-radius 10px
             padding 50px
             background #fff

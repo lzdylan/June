@@ -41,7 +41,7 @@
     export default{
         data() {
             return {
-                theme: 'primary'
+                theme: 'dark'
             };
         }
     };
@@ -52,10 +52,10 @@
         flex-direction row
         justify-content space-between
         height 45px
-        background #3399ff
+        background #464c5b
         h1
             color #fff
-            line-height 45px
+            line-height 44px
             display flex
             padding-left 10px
             align-items center
@@ -64,9 +64,11 @@
             display flex
             flex-direction row
             justify-content space-between
+            background #464c5b
             .ivu-menu-horizontal
                 height 45px
                 line-height 45px
+                background #464c5b
             .demo-badge-alone
                 background #5cb85c !important
             .demo-badge-other

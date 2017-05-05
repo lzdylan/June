@@ -7,6 +7,8 @@ import index from '@/components/index';
 import welcome from '@/components/welcome';
 import goodsType from '@/components/goodsType';
 import editGoodsType from '@/components/editGoodsType';
+import category from '@/components/category';
+import editCategory from '@/components/editCategory';
 
 Vue.use(Router);
 Vue.use(iview);
@@ -26,6 +28,7 @@ export default new Router({
             children: [
                 {
                     path: '',
+                    name: 'welcome',
                     component: welcome
                 },
                 {
@@ -37,6 +40,16 @@ export default new Router({
                     path: '/editGoodsType',
                     name: 'editGoodsType',
                     component: editGoodsType
+                },
+                {
+                    path: '/category',
+                    name: 'category',
+                    component: category
+                },
+                {
+                    path: '/editCategory',
+                    name: 'editCategory',
+                    component: editCategory
                 }
             ]
         }

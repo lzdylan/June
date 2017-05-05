@@ -1,0 +1,123 @@
+<template>
+    <div class="category">
+        <h3>添加商品分类<Button type="ghost" @click="category"><Icon style="margin-right:10px" type="arrow-return-left"></Icon>返回列表</Button></h3>
+        <Form ref="formItem" :model="formItem" :rules="ruleValidate" :label-width="180">
+            <Form-item label="商品分类" prop="cat_name">
+                <Input v-model="formItem.cat_name" placeholder="请输入商品分类名称"></Input>
+            </Form-item>
+            <Form-item label="所属类型" prop="type_id">
+                <Select v-model="formItem.type_id" style="width:200px">
+                    <Option v-for="item in type" :value="item._id" :key="item">{{ item.type_name }}</Option>
+                </Select>
+            </Form-item>
+            <Form-item label="所属类型" prop="type_id">
+                <Upload action="http://jsonplaceholder.typicode.com/posts/">
+                    <Button type="ghost" icon="ios-cloud-upload-outline">上传文件</Button>
+                </Upload>
+            </Form-item>
+            <Form-item label="是否显示" prop="is_show">
+                <i-switch v-model="formItem.is_show" size="large">
+                    <span slot="open">是</span>
+                    <span slot="close">否</span>
+                </i-switch>
+            </Form-item>
+            <Form-item label="计量单位" prop="measure_unit">
+                <Input v-model="formItem.measure_unit" placeholder="请输入商品计量单位"></Input>
+            </Form-item>
+            <Form-item label="商品描述" prop="cat_desc">
+                <Input v-model="formItem.cat_desc" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></Input>
+            </Form-item>
+            <Form-item>
+                <Button type="primary" @click="saveCategory('formItem')">保存</Button>
+                <Button type="ghost"  @click="handleReset('formItem')" style="margin-left: 8px">重置</Button>
+            </Form-item>
+        </Form>
+    </div>
+</template>
+<script type="text/ecmascript-6">
+    export default{
+        data() {
+            return {
+                type: [],
+                formItem: {
+                    cat_name: '',
+                    is_show: true,
+                    measure_unit: '',
+                    type_id: '',
+                    cat_desc: ''
+                },
+                ruleValidate: {
+                    cat_name: [
+                        { required: true, message: '产品分类不能为空', trigger: 'blur' }
+                    ]
+                }
+            };
+        },
+        mounted() {
+            var catName = this.$route.query.cat_name;
+            var _this = this;
+            if (catName) {
+                this.axios.post('/api/ecategory', {'cat_name': catName})
+                        .then(function (response) {
+                            _this.formItem = response.data;
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+            }
+            this.axios.get('/api/fgoodsType')
+                    .then(function (response) {
+                        _this.type = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+        },
+        methods: {
+            handleReset (name) {
+                this.$refs[name].resetFields();
+            },
+            category: function () {
+                this.$router.push('/category');
+            },
+            saveCategory: function (name) {
+                let _this = this;
+                this.$refs[name].validate(function (valid) {
+                    if (valid) {
+                        _this.axios.post('/api/acategory', _this.formItem)
+                                .then(function (response) {
+                                    if (response.data.errno === 0) {
+                                        _this.$Message.success(response.data.message, 1.5, function () {
+                                            _this.handleReset('formItem');
+                                            if (response.data.message === '更新成功!') {
+                                                _this.$router.push('/category');
+                                            }
+                                        });
+                                    } else {
+                                        _this.$Message.error(response.data.message, 1.5, function () {
+                                            _this.handleReset('formItem');
+                                        });
+                                    }
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                });
+                    } else {
+                        _this.$Message.error('表单验证失败!');
+                    }
+                });
+            }
+        }
+    };
+</script>
+<style lang="stylus" rel="stylesheet/stylus">
+    .category
+        margin 0px auto
+        h3
+            line-height 35px
+            font-size 16px
+            border-bottom 1px solid #e2e2e2
+        form
+            width 80%
+            margin 10px auto
+</style>

@@ -1,6 +1,6 @@
 <template>
-    <div class="goodsType">
-        <h3>商品类型列表 <Button type="ghost" @click="addGoodsType"><Icon style="margin-right:10px" type="plus"></Icon>添加类型</Button></h3>
+    <div class="category">
+        <h3>商品分类列表 <Button type="ghost" @click="addCategory"><Icon style="margin-right:10px" type="plus"></Icon>添加分类</Button></h3>
         <Table :context='self' stripe :columns="columns" :data="data" size="small"></Table>
     </div>
 </template>
@@ -12,7 +12,7 @@
                 columns: [
                     {
                         title: '名称',
-                        key: 'type_name'
+                        key: 'cat_name'
                     },
                     {
                         title: '是否显示',
@@ -23,16 +23,12 @@
                         }
                     },
                     {
-                        title: '是否在导航栏显示',
-                        key: 'show_in_nav',
-                        align: 'center',
-                        render (row, column, index) {
-                            return `<i-switch type="primary" size="small" v-model="data[${index}].show_in_nav" @on-change="oSwitch(${index})"></i-switch>`;
-                        }
+                        title: '计量单位',
+                        key: 'measure_unit'
                     },
                     {
                         title: '描述',
-                        key: 'type_desc'
+                        key: 'cat_desc'
                     },
                     {
                         title: '操作',
@@ -47,15 +43,15 @@
             };
         },
         methods: {
-            addGoodsType: function () {
-                this.$router.push('/editGoodsType');
+            addCategory: function () {
+                this.$router.push('/editCategory');
             },
             edit: function(index) {
-                this.$router.push({path: '/editGoodsType', query: {type_name: this.data[index].type_name}});
+                this.$router.push({path: '/editCategory', query: {cat_name: this.data[index].cat_name}});
             },
             oSwitch: function(index) {
                 var _this = this;
-                this.axios.post('/api/agoodsType', this.data[index])
+                this.axios.post('/api/acategory', this.data[index])
                         .then(function (response) {
                             _this.$Message.success('修改成功！');
                         })
@@ -66,20 +62,20 @@
             },
             remove: function (index) {
                 var _this = this;
-                this.axios.post('/api/rgoodsType', {'type_name': this.data[index].type_name})
-                    .then(function (response) {
-                        _this.data.splice(index, 1);
-                        _this.$Message.success('删除成功！');
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                        _this.$Message.error('删除失败！');
-                    });
+                this.axios.post('/api/rcategory', {'cat_name': this.data[index].cat_name})
+                        .then(function (response) {
+                            _this.data.splice(index, 1);
+                            _this.$Message.success('删除成功！');
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                            _this.$Message.error('删除失败！');
+                        });
             }
         },
         mounted() {
             var _this = this;
-            this.axios.get('/api/fgoodsType')
+            this.axios.get('/api/fcategory')
                     .then(function (response) {
                         _this.data = response.data;
                     })
@@ -90,7 +86,7 @@
     };
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
-    .goodsType
+    .category
         margin 0px auto
         h3
             line-height 35px
