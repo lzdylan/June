@@ -1,6 +1,6 @@
 <template>
     <div class="head">
-       <h1>六月生辰</h1>
+       <h1>Ipearling</h1>
         <div class="ygp-badge">
             <Menu mode="horizontal" :theme="theme" active-name="0">
                 <Menu-item name="1">

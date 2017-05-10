@@ -19,5 +19,6 @@ apiRouters.get('/fcategory', Category.fcategory);
 apiRouters.post('/rcategory', Category.rcategory);
 apiRouters.post('/ecategory', Category.ecategory);
 apiRouters.post('/acategory', Category.acategory);
+apiRouters.post('/upload', Category.imgUpload);
 
 module.exports = apiRouters;

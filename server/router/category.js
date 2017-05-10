@@ -2,6 +2,24 @@
  * Created by war3_2 on 2017/5/5.
  */
 var Category = require("../junedb/category.js");
+var multer = require('multer');
+var logoName = '';
+var storage = multer.diskStorage({
+    //设置上传后文件路径，uploads文件夹会自动创建。
+    destination: function (req, file, cb) {
+        cb(null, 'upload/category')
+    },
+    //给上传文件重命名，获取添加后缀名
+    filename: function (req, file, cb) {
+        var fileFormat = (file.originalname).split(".");
+        logoName = file.fieldname + '-' + Date.now() + "." + fileFormat[fileFormat.length - 1];
+        cb(null, logoName);
+    }
+});
+//添加配置文件到muler对象。
+var upload = multer({
+    storage: storage
+}).single('cat_logo');
 
 exports.fcategory = function (request, response) {
     Category.find(function(err, res){
@@ -78,5 +96,24 @@ exports.acategory = function (request, response) {
                 })
             }
         }
+    })
+}
+
+exports.imgUpload = function (request, response) {
+    upload(request, response, function (err) {
+        if (err) {
+            // 发生错误
+            response.json({
+                errno: 1,
+                message: '上传失败!'
+            });
+            return
+        }
+        response.json({
+            errno: 0,
+            message: '上传成功!',
+            logoName: logoName
+        });
+        // 一切都好
     })
 }

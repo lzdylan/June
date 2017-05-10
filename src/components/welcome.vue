@@ -2,7 +2,7 @@
     <div class="index">
         <div class="city">
             <span class="town">杭州</span>
-            <span class="cale">星期二<strong>23<em>6月</em></strong></span>
+            <span class="cale">{{weekDay}}<strong>{{day}}日<em>{{month}}月</em></strong></span>
         </div>
         <div class="content_chart">
             <div id="msales"></div>
@@ -476,6 +476,10 @@
     export default{
         data() {
             return {
+                weekDay: '',
+                week: ['日', '一', '二', '三', '四', '五', '六'],
+                day: '',
+                month: ''
             };
         },
         ready() {
@@ -485,6 +489,15 @@
         mounted() {
             document.getElementById('msales').style.minWidth = document.documentElement.clientWidth - 247 + 'px';
             initchart();
+            this.creatDate();
+        },
+        methods: {
+            creatDate: function () {
+                var d = new Date();
+                this.weekDay = '星期' + this.week[d.getDay()];
+                this.month = (d.getMonth() + 1);
+                this.day = d.getDate();
+            }
         }
     };
 </script>

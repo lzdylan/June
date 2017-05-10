@@ -1,7 +1,7 @@
 <template>
     <div class="category">
         <h3>添加商品分类<Button type="ghost" @click="category"><Icon style="margin-right:10px" type="arrow-return-left"></Icon>返回列表</Button></h3>
-        <Form ref="formItem" :model="formItem" :rules="ruleValidate" :label-width="180">
+        <Form ref="formItem" :model="formItem" :rules="ruleValidate" :label-width="180" enctype=‘multipart/form-data’>
             <Form-item label="商品分类" prop="cat_name">
                 <Input v-model="formItem.cat_name" placeholder="请输入商品分类名称"></Input>
             </Form-item>
@@ -10,8 +10,14 @@
                     <Option v-for="item in type" :value="item._id" :key="item">{{ item.type_name }}</Option>
                 </Select>
             </Form-item>
-            <Form-item label="所属类型" prop="type_id">
-                <Upload action="http://jsonplaceholder.typicode.com/posts/">
+            <Form-item label="分类LOGO" prop="cat_logo">
+                <Upload
+                        action="/api/upload"
+                        name="cat_logo"
+                        :default-file-list="defaultList"
+                        :on-success="handleSuccess"
+                        :on-error="handleError"
+                        :format="['jpg','jpeg','png']">
                     <Button type="ghost" icon="ios-cloud-upload-outline">上传文件</Button>
                 </Upload>
             </Form-item>
@@ -39,11 +45,13 @@
         data() {
             return {
                 type: [],
+                defaultList: [],
                 formItem: {
                     cat_name: '',
                     is_show: true,
                     measure_unit: '',
                     type_id: '',
+                    cat_logo: '',
                     cat_desc: ''
                 },
                 ruleValidate: {
@@ -74,6 +82,16 @@
                     });
         },
         methods: {
+            handleSuccess (response, file) {
+                // 因为上传过程为实例，这里模拟添加 url
+                this.$Message.success(response.message);
+                this.formItem.cat_logo = response.logoName;
+                console.log(response);
+            },
+            handleError (error, file) {
+                // 因为上传过程为实例，这里模拟添加 url
+                this.$Message.error(error.message);
+            },
             handleReset (name) {
                 this.$refs[name].resetFields();
             },
@@ -92,6 +110,7 @@
                                             if (response.data.message === '更新成功!') {
                                                 _this.$router.push('/category');
                                             }
+                                            _this.defaultList = [];
                                         });
                                     } else {
                                         _this.$Message.error(response.data.message, 1.5, function () {

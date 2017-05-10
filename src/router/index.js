@@ -9,6 +9,13 @@ import goodsType from '@/components/goodsType';
 import editGoodsType from '@/components/editGoodsType';
 import category from '@/components/category';
 import editCategory from '@/components/editCategory';
+import goodsList from '@/components/goodsList';
+import users from '@/components/users';
+import orderList from '@/components/orderList';
+import customerService from '@/components/customerService';
+import orderCount from '@/components/orderCount';
+import usersCount from '@/components/usersCount';
+import salesCount from '@/components/salesCount';
 
 Vue.use(Router);
 Vue.use(iview);
@@ -50,6 +57,41 @@ export default new Router({
                     path: '/editCategory',
                     name: 'editCategory',
                     component: editCategory
+                },
+                {
+                    path: '/goodsList',
+                    name: 'goodsList',
+                    component: goodsList
+                },
+                {
+                    path: '/users',
+                    name: 'users',
+                    component: users
+                },
+                {
+                    path: '/orderList',
+                    name: 'orderList',
+                    component: orderList
+                },
+                {
+                    path: '/customerService',
+                    name: 'customerService',
+                    component: customerService
+                },
+                {
+                    path: '/orderCount',
+                    name: 'orderCount',
+                    component: orderCount
+                },
+                {
+                    path: '/usersCount',
+                    name: 'usersCount',
+                    component: usersCount
+                },
+                {
+                    path: '/salesCount',
+                    name: 'salesCount',
+                    component: salesCount
                 }
             ]
         }

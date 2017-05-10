@@ -19,7 +19,7 @@
                         key: 'is_show',
                         align: 'center',
                         render (row, column, index) {
-                            return `<i-switch type="primary" size="small" v-model="data[${index}].is_show" @on-change="oSwitch(${index})"></i-switch>`;
+                            return `<i-switch type="primary" size="small" v-if="data[${index}]" v-model="data[${index}].is_show" @on-change="oSwitch(${index})"></i-switch>`;
                         }
                     },
                     {

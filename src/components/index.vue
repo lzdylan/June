@@ -15,10 +15,6 @@
     export default{
         data () {
             return {
-                formItem: {
-                    username: '',
-                    userpwd: ''
-                }
             };
         },
         components: {
