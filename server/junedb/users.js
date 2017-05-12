@@ -45,7 +45,6 @@ var UsersSchema = new mongoose.Schema({
         ref: 'users' //这里要写你指向的数据库表名字
     },
     user_address: [{
-        address_id: {type: ObjectId},
         address_name: 	{type: String}, 	// 名称
         consignee: {type: String}, 	// 收货人的名字
         email: 	{type: String}, 	// 收货人的email

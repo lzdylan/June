@@ -65,7 +65,7 @@
             var catName = this.$route.query.cat_name;
             var _this = this;
             if (catName) {
-                this.axios.post('/api/ecategory', {'cat_name': catName})
+                this.axios.post('/api/editCategory', {'cat_name': catName})
                         .then(function (response) {
                             _this.formItem = response.data;
                         })
@@ -73,7 +73,7 @@
                             console.log(error);
                         });
             }
-            this.axios.get('/api/fgoodsType')
+            this.axios.get('/api/findGoodsType')
                     .then(function (response) {
                         _this.type = response.data;
                     })
@@ -102,25 +102,48 @@
                 let _this = this;
                 this.$refs[name].validate(function (valid) {
                     if (valid) {
-                        _this.axios.post('/api/acategory', _this.formItem)
-                                .then(function (response) {
-                                    if (response.data.errno === 0) {
-                                        _this.$Message.success(response.data.message, 1.5, function () {
-                                            _this.handleReset('formItem');
-                                            if (response.data.message === '更新成功!') {
-                                                _this.$router.push('/category');
-                                            }
-                                            _this.defaultList = [];
-                                        });
-                                    } else {
-                                        _this.$Message.error(response.data.message, 1.5, function () {
-                                            _this.handleReset('formItem');
-                                        });
-                                    }
-                                })
-                                .catch(function (error) {
-                                    console.log(error);
-                                });
+                        _this.formItem.cat_name = _this.formItem.cat_name.trim();
+                        if (_this.$route.query.cat_name) {
+                            _this.axios.post('/api/updateCategory', _this.formItem)
+                                    .then(function (response) {
+                                        if (response.data.errno === 0) {
+                                            _this.$Message.success(response.data.message, 1.5, function () {
+                                                _this.handleReset('formItem');
+                                                if (response.data.message === '更新成功!') {
+                                                    _this.$router.push('/category');
+                                                }
+                                                _this.defaultList = [];
+                                            });
+                                        } else {
+                                            _this.$Message.error(response.data.message, 1.5, function () {
+                                                _this.handleReset('formItem');
+                                            });
+                                        }
+                                    })
+                                    .catch(function (error) {
+                                        console.log(error);
+                                    });
+                        } else {
+                            _this.axios.post('/api/addCategory', _this.formItem)
+                                    .then(function (response) {
+                                        if (response.data.errno === 0) {
+                                            _this.$Message.success(response.data.message, 1.5, function () {
+                                                _this.handleReset('formItem');
+                                                if (response.data.message === '添加成功!') {
+                                                    _this.$router.push('/category');
+                                                }
+                                                _this.defaultList = [];
+                                            });
+                                        } else {
+                                            _this.$Message.error(response.data.message, 1.5, function () {
+                                                _this.handleReset('formItem');
+                                            });
+                                        }
+                                    })
+                                    .catch(function (error) {
+                                        console.log(error);
+                                    });
+                        }
                     } else {
                         _this.$Message.error('表单验证失败!');
                     }

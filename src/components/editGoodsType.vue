@@ -48,7 +48,7 @@
             var typeName = this.$route.query.type_name;
             var _this = this;
             if (typeName) {
-                this.axios.post('/api/egoodsType', {'type_name': typeName})
+                this.axios.post('/api/editGoodsType', {'type_name': typeName})
                     .then(function (response) {
                         _this.formItem = response.data;
                     })
@@ -68,24 +68,46 @@
                 let _this = this;
                 this.$refs[name].validate(function (valid) {
                     if (valid) {
-                        _this.axios.post('/api/agoodsType', _this.formItem)
-                            .then(function (response) {
-                                if (response.data.errno === 0) {
-                                    _this.$Message.success(response.data.message, 1.5, function () {
-                                        _this.handleReset('formItem');
-                                        if (response.data.message === '更新成功!') {
-                                            _this.$router.push('/goodsType');
+                        _this.formItem.type_name = _this.formItem.type_name.trim();
+                        if (_this.$route.query.type_name) {
+                            _this.axios.post('/api/updateGoodsType', _this.formItem)
+                                    .then(function (response) {
+                                        if (response.data.errno === 0) {
+                                            _this.$Message.success(response.data.message, 1.5, function () {
+                                                _this.handleReset('formItem');
+                                                if (response.data.message === '更新成功!') {
+                                                    _this.$router.push('/goodsType');
+                                                }
+                                            });
+                                        } else {
+                                            _this.$Message.error(response.data.message, 1.5, function () {
+                                                _this.handleReset('formItem');
+                                            });
                                         }
+                                    })
+                                    .catch(function (error) {
+                                        console.log(error);
                                     });
-                                } else {
-                                    _this.$Message.error(response.data.message, 1.5, function () {
-                                        _this.handleReset('formItem');
-                                    });
-                                }
-                            })
-                            .catch(function (error) {
-                                console.log(error);
-                            });
+                        } else {
+                            _this.axios.post('/api/addGoodsType', _this.formItem)
+                                .then(function (response) {
+                                    if (response.data.errno === 0) {
+                                        _this.$Message.success(response.data.message, 1.5, function () {
+                                            _this.handleReset('formItem');
+                                            if (response.data.message === '添加成功!') {
+                                                _this.$router.push('/goodsType');
+                                            }
+                                        });
+                                    } else {
+                                        _this.$Message.error(response.data.message, 1.5, function () {
+                                            _this.handleReset('formItem');
+                                        });
+                                    }
+                                })
+                                .catch(function (error) {
+                                    console.log(error);
+                                });
+                        }
                     } else {
                         _this.$Message.error('表单验证失败!');
                     }

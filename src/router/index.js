@@ -16,6 +16,7 @@ import customerService from '@/components/customerService';
 import orderCount from '@/components/orderCount';
 import usersCount from '@/components/usersCount';
 import salesCount from '@/components/salesCount';
+import usersDetail from '@/components/usersDetail';
 
 Vue.use(Router);
 Vue.use(iview);
@@ -92,6 +93,11 @@ export default new Router({
                     path: '/salesCount',
                     name: 'salesCount',
                     component: salesCount
+                },
+                {
+                    path: '/usersDetail',
+                    name: 'usersDetail',
+                    component: usersDetail
                 }
             ]
         }

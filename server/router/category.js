@@ -21,7 +21,7 @@ var upload = multer({
     storage: storage
 }).single('cat_logo');
 
-exports.fcategory = function (request, response) {
+exports.findCategory = function (request, response) {
     Category.find(function(err, res){
         if (err) {
             console.log("Error:" + err);
@@ -31,7 +31,7 @@ exports.fcategory = function (request, response) {
         }
     })
 }
-exports.rcategory = function (request, response) {
+exports.removeCategory = function (request, response) {
     Category.findOneAndRemove({'cat_name': request.body.cat_name}, function(err, res){
         if (err) {
             console.log("Error:" + err);
@@ -41,7 +41,7 @@ exports.rcategory = function (request, response) {
         }
     })
 }
-exports.ecategory = function (request, response) {
+exports.editCategory = function (request, response) {
     Category.findOne({'cat_name': request.body.cat_name}, function(err, res){
         if (err) {
             console.log("Error:" + err);
@@ -52,7 +52,26 @@ exports.ecategory = function (request, response) {
         }
     })
 }
-exports.acategory = function (request, response) {
+exports.updateCategory = function (request, response) {
+    var goodsType = request.body;
+    Category.update({'cat_name': request.body.cat_name}, goodsType, function(err, desc){
+        if (err) {
+            response.json({
+                errno: 1,
+                message: '更新失败!',
+                desc: desc
+            });
+        }
+        else {
+            response.json({
+                errno: 0,
+                message: '更新成功!',
+                desc: desc
+            });
+        }
+    })
+}
+exports.addCategory = function (request, response) {
     Category.find({'cat_name': request.body.cat_name}, function (err, res) {
         if (err) {
             console.log("Error:" + err);
@@ -77,23 +96,11 @@ exports.acategory = function (request, response) {
                     }
                 })
             }else {
-                var goodsType = request.body;
-                Category.update({'cat_name': request.body.cat_name}, goodsType, function(err, desc){
-                    if (err) {
-                        response.json({
-                            errno: 1,
-                            message: '更新失败!',
-                            desc: desc
-                        });
-                    }
-                    else {
-                        response.json({
-                            errno: 0,
-                            message: '更新成功!',
-                            desc: desc
-                        });
-                    }
-                })
+                response.json({
+                    errno: 1,
+                    message: '商品分类已经存在，添加失败!',
+                    desc: res
+                });
             }
         }
     })

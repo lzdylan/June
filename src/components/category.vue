@@ -51,7 +51,7 @@
             },
             oSwitch: function(index) {
                 var _this = this;
-                this.axios.post('/api/acategory', this.data[index])
+                this.axios.post('/api/updateCategory', this.data[index])
                         .then(function (response) {
                             _this.$Message.success('修改成功！');
                         })
@@ -62,7 +62,7 @@
             },
             remove: function (index) {
                 var _this = this;
-                this.axios.post('/api/rcategory', {'cat_name': this.data[index].cat_name})
+                this.axios.post('/api/removeCategory', {'cat_name': this.data[index].cat_name})
                         .then(function (response) {
                             _this.data.splice(index, 1);
                             _this.$Message.success('删除成功！');
@@ -75,7 +75,7 @@
         },
         mounted() {
             var _this = this;
-            this.axios.get('/api/fcategory')
+            this.axios.get('/api/findCategory')
                     .then(function (response) {
                         _this.data = response.data;
                     })

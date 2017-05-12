@@ -5,20 +5,27 @@ var express = require('express');
 var Login = require("./login.js");
 var GoodsType = require("./goodsType.js");
 var Category = require("./category.js");
+var Users = require("./users.js");
 var apiRouters = express.Router();
 
 apiRouters.get('/login', Login.getLogin);
 apiRouters.post('/login', Login.postLogin);
 
-apiRouters.get('/fgoodsType', GoodsType.fgoodsType);
-apiRouters.post('/rgoodsType', GoodsType.rgoodsType);
-apiRouters.post('/egoodsType', GoodsType.egoodsType);
-apiRouters.post('/agoodsType', GoodsType.agoodsType);
+apiRouters.get('/findGoodsType', GoodsType.findGoodsType);
+apiRouters.post('/removeGoodsType', GoodsType.removeGoodsType);
+apiRouters.post('/updateGoodsType', GoodsType.updateGoodsType);
+apiRouters.post('/editGoodsType', GoodsType.editGoodsType);
+apiRouters.post('/addGoodsType', GoodsType.addGoodsType);
 
-apiRouters.get('/fcategory', Category.fcategory);
-apiRouters.post('/rcategory', Category.rcategory);
-apiRouters.post('/ecategory', Category.ecategory);
-apiRouters.post('/acategory', Category.acategory);
+apiRouters.get('/findCategory', Category.findCategory);
+apiRouters.post('/removeCategory', Category.removeCategory);
+apiRouters.post('/editCategory', Category.editCategory);
+apiRouters.post('/addCategory', Category.addCategory);
+apiRouters.post('/updateCategory', Category.updateCategory);
 apiRouters.post('/upload', Category.imgUpload);
 
+
+apiRouters.get('/getFindUsers', Users.getFindUsers);
+apiRouters.post('/postFindUsers', Users.postFindUsers);
+apiRouters.post('/updateUsers', Users.updateUsers);
 module.exports = apiRouters;
