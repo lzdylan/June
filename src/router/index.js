@@ -2,6 +2,7 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import iview from 'iview';
 import axios from 'axios';
+import moment from 'moment';
 import login from '@/components/login';
 import index from '@/components/index';
 import welcome from '@/components/welcome';
@@ -21,6 +22,7 @@ import usersDetail from '@/components/usersDetail';
 Vue.use(Router);
 Vue.use(iview);
 Vue.prototype.axios = axios;
+Vue.prototype.moment = moment;
 export default new Router({
     mode: 'history',
     routes: [

@@ -11,10 +11,10 @@ var UsersSchema = new mongoose.Schema({
     user_password : { type: String},
     user_avatar : { type: String},  // 头像
     sex: {type: Boolean},
-    pay_points: {type: Number}, // 消费积分
-    reg_time : { type: Date, defult: Date.now()},  // 注册时间
+    pay_points: {type: Number, default: 0}, // 消费积分
+    reg_time : { type: Date, default: Date.now()},  // 注册时间
     is_enable: {type: Boolean},
-    last_login: {type: Date, defult: Date.now()}, // 最后一次登录时间
+    last_login: {type: Date, default: Date.now()}, // 最后一次登录时间
     alias: {type: String}, // 昵称
     wechat:{
         id: {type: String},
@@ -55,6 +55,7 @@ var UsersSchema = new mongoose.Schema({
         zipcode: {type: String}, 	// 收货人的邮编
         tel: {type: String}, 	// 收货人的电话
         mobile: {type: String}, 	// 收货人的手机号
+        default_address: {type: Boolean, default: true}, // 默认地址
         best_time: {type: String},	 	// 收货人的最佳收货时间
     }]
 });

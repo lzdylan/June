@@ -4,14 +4,29 @@
 var Users = require("../junedb/users.js");
 
 exports.getFindUsers = function (request, response) {
-    Users.find({}, function(err, res){
-        if (err) {
-            console.log("Error:" + err);
-        }
-        else {
-            response.json(res);
-        }
-    })
+    console.log(request.query);
+    if(request.query) {
+        var pageSize = Number(request.query.pageSize);                   // 一页多少条
+        var currentPage = request.query.current;                // 当前第几页
+        var skipnum = (currentPage - 1) * pageSize;   // 跳过数
+        Users.find().skip(skipnum).limit(pageSize).exec(function (err, res) {
+            if (err) {
+                console.log("Error:" + err);
+            }
+            else {
+                response.json(res);
+            }
+        })
+    } else {
+        Users.find({}, function(err, res){
+            if (err) {
+                console.log("Error:" + err);
+            }
+            else {
+                response.json(res);
+            }
+        })
+    }
 }
 exports.postFindUsers = function (request, response) {
     Users.findOne({'user_name': request.body.user_name}, function(err, res){
@@ -42,3 +57,17 @@ exports.updateUsers = function (request, response) {
         }
     })
 }
+function getByPager(pageSize, currentPage){
+    var pageSize = this.pageSize;                   // 一页多少条
+    var currentPage = this.currentPage;                // 当前第几页
+    var skipnum = (currentPage - 1) * pageSize;   // 跳过数
+    Users.find().skip(skipnum).limit(pageSize).exec(function (err, res) {
+        if (err) {
+            console.log("Error:" + err);
+        }
+        else {
+            return res;
+        }
+    })
+}
+

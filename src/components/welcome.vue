@@ -14,7 +14,7 @@
             </div>
             <div class="chart_box">
                 <h3>产品销售概况</h3>
-                <div id="sales_overview"></div>
+                <div id="sales_overview" style="width:350px;"></div>
             </div>
         </div>
     </div>
@@ -484,10 +484,12 @@
         },
         ready() {
             document.getElementById('msales').style.minWidth = document.documentElement.clientWidth - 247 + 'px';
+            document.getElementById('recovery').style.minWidth = document.documentElement.clientWidth - 610 + 'px';
             initchart();
         },
         mounted() {
             document.getElementById('msales').style.minWidth = document.documentElement.clientWidth - 247 + 'px';
+            document.getElementById('recovery').style.minWidth = document.documentElement.clientWidth - 610 + 'px';
             initchart();
             this.creatDate();
         },

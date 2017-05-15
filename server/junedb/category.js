@@ -8,7 +8,7 @@ var CategorySchema = new mongoose.Schema({
     cat_name: {type: String},                  //分类名称
     cat_desc : { type: String},                //分类描述
     measure_unit : { type: String, default: '件'},            //该分类的计量单位
-    is_show: {type: Boolean},                   //是否在前台页面显示 true显示; false不显示
+    is_show: {type: Boolean, default: false},                   //是否在前台页面显示 true显示; false不显示
     cat_logo: {type: String},
     type_id: {
         type: mongoose.Schema.Types.ObjectId,

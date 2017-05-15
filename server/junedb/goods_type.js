@@ -7,8 +7,8 @@ var mongoose = require('../connection_junedb.js');
 var GoodsTypeSchema = new mongoose.Schema({
     type_name: {type: String},
     type_desc: {type: String},
-    is_show: {type: Boolean},
-    show_in_nav: {type: Boolean}
+    is_show: {type: Boolean, default: false},
+    show_in_nav: {type: Boolean, default: false}
 });
 
 module.exports = mongoose.model('GoodsType',GoodsTypeSchema);

@@ -57,6 +57,9 @@
                 ruleValidate: {
                     cat_name: [
                         { required: true, message: '产品分类不能为空', trigger: 'blur' }
+                    ],
+                    type_id: [
+                        { required: true, message: '产品类型不能为空', trigger: 'blur' }
                     ]
                 }
             };

@@ -3,6 +3,7 @@
  */
 var mongoose = require('mongoose'),
     DB_URL = 'mongodb://localhost:27017/junedb';
+mongoose.Promise = global.Promise;
 
 /**
  * 连接
