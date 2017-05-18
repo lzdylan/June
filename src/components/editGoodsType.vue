@@ -5,6 +5,11 @@
             <Form-item label="商品类型" prop="type_name">
                 <Input v-model="formItem.type_name" placeholder="请输入商品类型名称"></Input>
             </Form-item>
+            <Form-item label="商品分类" prop="cat_id">
+                <Select v-model="formItem.cat_id" style="width:200px">
+                    <Option v-for="item in category" :value="item._id" :key="item">{{ item.cat_name }}</Option>
+                </Select>
+            </Form-item>
             <Form-item label="是否显示" prop="is_show">
                 <i-switch v-model="formItem.is_show" size="large">
                     <span slot="open">是</span>
@@ -31,10 +36,12 @@
     export default{
         data() {
             return {
+                category: [],
                 formItem: {
                     type_name: '',
                     is_show: true,
                     show_in_nav: false,
+                    cat_id: '',
                     type_desc: ''
                 },
                 ruleValidate: {
@@ -56,6 +63,13 @@
                         console.log(error);
                     });
             }
+            this.axios.get('/api/findCategory')
+                .then(function (response) {
+                    _this.category = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         },
         methods: {
             handleReset (name) {
@@ -64,49 +78,33 @@
             goodsType: function () {
                 this.$router.push('/goodsType');
             },
+            submitData: function (path, that) {
+                that.axios.post(path, that.formItem)
+                    .then(function (response) {
+                        if (response.data.errno === 0) {
+                            that.$Message.success(response.data.message, 1.5, function () {
+                                that.handleReset('formItem');
+                                that.$router.push('/goodsType');
+                            });
+                        } else {
+                            that.$Message.error(response.data.message, 1.5, function () {
+                                that.handleReset('formItem');
+                            });
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
             saveGoodsType: function (name) {
                 let _this = this;
                 this.$refs[name].validate(function (valid) {
                     if (valid) {
                         _this.formItem.type_name = _this.formItem.type_name.trim();
                         if (_this.$route.query.type_name) {
-                            _this.axios.post('/api/updateGoodsType', _this.formItem)
-                                    .then(function (response) {
-                                        if (response.data.errno === 0) {
-                                            _this.$Message.success(response.data.message, 1.5, function () {
-                                                _this.handleReset('formItem');
-                                                if (response.data.message === '更新成功!') {
-                                                    _this.$router.push('/goodsType');
-                                                }
-                                            });
-                                        } else {
-                                            _this.$Message.error(response.data.message, 1.5, function () {
-                                                _this.handleReset('formItem');
-                                            });
-                                        }
-                                    })
-                                    .catch(function (error) {
-                                        console.log(error);
-                                    });
+                            _this.submitData('/api/updateGoodsType', _this);
                         } else {
-                            _this.axios.post('/api/addGoodsType', _this.formItem)
-                                .then(function (response) {
-                                    if (response.data.errno === 0) {
-                                        _this.$Message.success(response.data.message, 1.5, function () {
-                                            _this.handleReset('formItem');
-                                            if (response.data.message === '添加成功!') {
-                                                _this.$router.push('/goodsType');
-                                            }
-                                        });
-                                    } else {
-                                        _this.$Message.error(response.data.message, 1.5, function () {
-                                            _this.handleReset('formItem');
-                                        });
-                                    }
-                                })
-                                .catch(function (error) {
-                                    console.log(error);
-                                });
+                            _this.submitData('/api/addGoodsType', _this);
                         }
                     } else {
                         _this.$Message.error('表单验证失败!');

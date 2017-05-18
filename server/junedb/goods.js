@@ -5,13 +5,17 @@
 var mongoose = require('../connection_junedb.js');
 
 var GoodsSchema = new mongoose.Schema({
-    cat_id: 	{type: Number}, 	 //商品所属商品分类id，取值category的cat_id
+    cat_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'categories' //这里要写你指向的数据库表名字
+    },
+    types_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'goodstypes' //这里要写你指向的数据库表名字
+    },
     goods_sn: 	{type: Number},	 //商品的唯一货号
     goods_name: 	{type: String},	 //商品的名称
-    goods_name_style: {type: String},	 //商品名称显示的样式；包括颜色和字体样式；格式如#ff00ff+strong
-    click_count: 	{type: Number}, 	 //商品点击数
     brand_id: 	{type: Number}, 	 //品牌id，取值于brand 的brand_id
-    provider_name:  {type: String},	 //供货人的名称，程序还没实现该功能
     goods_number: 	{type: Number}, 	 //商品库存数量
     goods_weight: 	{type: Number}, 	 //商品的重量，以千克为单位
     market_price: 	{type: Number}, 	 //市场售价

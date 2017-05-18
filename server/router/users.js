@@ -3,32 +3,44 @@
  */
 var Users = require("../junedb/users.js");
 
-exports.getFindUsers = function (request, response) {
-    console.log(request.query);
-    if(request.query) {
-        var pageSize = Number(request.query.pageSize);                   // 一页多少条
-        var currentPage = request.query.current;                // 当前第几页
+exports.loadUsers = function (request, response) {
+        var dataCount = 0;
+        var condition = '';
+        var pageSize = Number(request.body.pageSize);                   // 一页多少条
+        var currentPage = request.body.current;                // 当前第几页
         var skipnum = (currentPage - 1) * pageSize;   // 跳过数
-        Users.find().skip(skipnum).limit(pageSize).exec(function (err, res) {
+        condition = request.body.user_name ? {'user_name': request.body.user_name} : {};
+        Users.count(condition, function(err, res){
             if (err) {
                 console.log("Error:" + err);
             }
             else {
-                response.json(res);
+                dataCount = res;
             }
-        })
-    } else {
-        Users.find({}, function(err, res){
+        });
+        Users.find(condition).skip(skipnum).limit(pageSize).exec(function (err, res) {
             if (err) {
                 console.log("Error:" + err);
             }
             else {
-                response.json(res);
+                response.json({
+                    res: res,
+                    dataCount: dataCount
+                });
             }
-        })
-    }
+        });
 }
 exports.postFindUsers = function (request, response) {
+    Users.find(request.body).exec(function (err, res) {
+        if (err) {
+            console.log("Error:" + err);
+        }
+        else {
+            response.json(res);
+        }
+    })
+}
+exports.editUsers = function (request, response) {
     Users.findOne({'user_name': request.body.user_name}, function(err, res){
         if (err) {
             console.log("Error:" + err);
@@ -57,11 +69,8 @@ exports.updateUsers = function (request, response) {
         }
     })
 }
-function getByPager(pageSize, currentPage){
-    var pageSize = this.pageSize;                   // 一页多少条
-    var currentPage = this.currentPage;                // 当前第几页
-    var skipnum = (currentPage - 1) * pageSize;   // 跳过数
-    Users.find().skip(skipnum).limit(pageSize).exec(function (err, res) {
+function loadData(condition) {
+    Users.find(condition).exec(function (err, res) {
         if (err) {
             console.log("Error:" + err);
         }

@@ -5,11 +5,6 @@
             <Form-item label="商品分类" prop="cat_name">
                 <Input v-model="formItem.cat_name" placeholder="请输入商品分类名称"></Input>
             </Form-item>
-            <Form-item label="所属类型" prop="type_id">
-                <Select v-model="formItem.type_id" style="width:200px">
-                    <Option v-for="item in type" :value="item._id" :key="item">{{ item.type_name }}</Option>
-                </Select>
-            </Form-item>
             <Form-item label="分类LOGO" prop="cat_logo">
                 <Upload
                         action="/api/upload"
@@ -50,16 +45,12 @@
                     cat_name: '',
                     is_show: true,
                     measure_unit: '',
-                    type_id: '',
                     cat_logo: '',
                     cat_desc: ''
                 },
                 ruleValidate: {
                     cat_name: [
                         { required: true, message: '产品分类不能为空', trigger: 'blur' }
-                    ],
-                    type_id: [
-                        { required: true, message: '产品类型不能为空', trigger: 'blur' }
                     ]
                 }
             };
@@ -69,27 +60,18 @@
             var _this = this;
             if (catName) {
                 this.axios.post('/api/editCategory', {'cat_name': catName})
-                        .then(function (response) {
-                            _this.formItem = response.data;
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
+                .then(function (response) {
+                    _this.formItem = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
             }
-            this.axios.get('/api/findGoodsType')
-                    .then(function (response) {
-                        _this.type = response.data;
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
         },
         methods: {
             handleSuccess (response, file) {
                 // 因为上传过程为实例，这里模拟添加 url
                 this.$Message.success(response.message);
-                this.formItem.cat_logo = response.logoName;
-                console.log(response);
             },
             handleError (error, file) {
                 // 因为上传过程为实例，这里模拟添加 url
@@ -101,51 +83,34 @@
             category: function () {
                 this.$router.push('/category');
             },
+            submitData: function (path, that) {
+                that.axios.post(path, that.formItem)
+                .then(function (response) {
+                    if (response.data.errno === 0) {
+                        that.$Message.success(response.data.message, 1.5, function () {
+                            that.handleReset('formItem');
+                            that.$router.push('/category');
+                            that.defaultList = [];
+                        });
+                    } else {
+                        that.$Message.error(response.data.message, 1.5, function () {
+                            that.handleReset('formItem');
+                        });
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            },
             saveCategory: function (name) {
                 let _this = this;
                 this.$refs[name].validate(function (valid) {
                     if (valid) {
                         _this.formItem.cat_name = _this.formItem.cat_name.trim();
                         if (_this.$route.query.cat_name) {
-                            _this.axios.post('/api/updateCategory', _this.formItem)
-                                    .then(function (response) {
-                                        if (response.data.errno === 0) {
-                                            _this.$Message.success(response.data.message, 1.5, function () {
-                                                _this.handleReset('formItem');
-                                                if (response.data.message === '更新成功!') {
-                                                    _this.$router.push('/category');
-                                                }
-                                                _this.defaultList = [];
-                                            });
-                                        } else {
-                                            _this.$Message.error(response.data.message, 1.5, function () {
-                                                _this.handleReset('formItem');
-                                            });
-                                        }
-                                    })
-                                    .catch(function (error) {
-                                        console.log(error);
-                                    });
+                            _this.submitData('/api/updateCategory', _this);
                         } else {
-                            _this.axios.post('/api/addCategory', _this.formItem)
-                                    .then(function (response) {
-                                        if (response.data.errno === 0) {
-                                            _this.$Message.success(response.data.message, 1.5, function () {
-                                                _this.handleReset('formItem');
-                                                if (response.data.message === '添加成功!') {
-                                                    _this.$router.push('/category');
-                                                }
-                                                _this.defaultList = [];
-                                            });
-                                        } else {
-                                            _this.$Message.error(response.data.message, 1.5, function () {
-                                                _this.handleReset('formItem');
-                                            });
-                                        }
-                                    })
-                                    .catch(function (error) {
-                                        console.log(error);
-                                    });
+                            _this.submitData('/api/addCategory', _this);
                         }
                     } else {
                         _this.$Message.error('表单验证失败!');

@@ -2,24 +2,11 @@
  * Created by war3_2 on 2017/5/5.
  */
 var Category = require("../junedb/category.js");
-var multer = require('multer');
-var logoName = '';
-var storage = multer.diskStorage({
-    //设置上传后文件路径，uploads文件夹会自动创建。
-    destination: function (req, file, cb) {
-        cb(null, 'upload/category')
-    },
-    //给上传文件重命名，获取添加后缀名
-    filename: function (req, file, cb) {
-        var fileFormat = (file.originalname).split(".");
-        logoName = file.fieldname + '-' + Date.now() + "." + fileFormat[fileFormat.length - 1];
-        cb(null, logoName);
-    }
-});
-//添加配置文件到muler对象。
-var upload = multer({
-    storage: storage
-}).single('cat_logo');
+var muilter  = require('../multerUtil');
+var gm = require('gm');
+var imageMagick = gm.subClass({ imageMagick : true });
+var cat_logo = '';
+var upload = muilter.single('cat_logo');
 
 exports.findCategory = function (request, response) {
     Category.find(function(err, res){
@@ -47,14 +34,14 @@ exports.editCategory = function (request, response) {
             console.log("Error:" + err);
         }
         else {
-            console.log(request.body.cat_name)
             response.json(res);
         }
     })
 }
 exports.updateCategory = function (request, response) {
-    var goodsType = request.body;
-    Category.update({'cat_name': request.body.cat_name}, goodsType, function(err, desc){
+    var categoryData = request.body;
+    categoryData.last_edit = Date.now();
+    Category.update({'cat_name': request.body.cat_name}, categoryData, function(err, desc){
         if (err) {
             response.json({
                 errno: 1,
@@ -78,8 +65,9 @@ exports.addCategory = function (request, response) {
         }
         else {
             if(res.length === 0) {
-                var goodsType = new Category(request.body);
-                goodsType.save(function(err, desc){
+                var categoryData = new Category(request.body);
+                categoryData.cat_logo = cat_logo;
+                categoryData.save(function(err, desc){
                     if (err) {
                         response.json({
                             errno: 1,
@@ -116,10 +104,20 @@ exports.imgUpload = function (request, response) {
             });
             return
         }
+        var path = request.file.path;
+        cat_logo = 'upload/category/'+request.file.filename;
+        imageMagick(path)
+            .resize(150, 150)
+            .autoOrient()
+            .write('upload/category/'+request.file.filename, function(err){
+                console.log(request.file);
+                if (err) {
+                    console.log(err);
+                }
+            });
         response.json({
             errno: 0,
-            message: '上传成功!',
-            logoName: logoName
+            message: '上传成功!'
         });
         // 一切都好
     })

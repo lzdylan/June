@@ -35,6 +35,7 @@ exports.editGoodsType = function (request, response) {
 }
 exports.updateGoodsType = function (request, response) {
     var goodsType = request.body;
+    goodsType.last_edit = Date.now();
     GoodsType.update({'type_name': request.body.type_name}, goodsType, function(err, desc){
         if (err) {
             response.json({

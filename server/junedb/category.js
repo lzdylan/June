@@ -9,11 +9,9 @@ var CategorySchema = new mongoose.Schema({
     cat_desc : { type: String},                //分类描述
     measure_unit : { type: String, default: '件'},            //该分类的计量单位
     is_show: {type: Boolean, default: false},                   //是否在前台页面显示 true显示; false不显示
-    cat_logo: {type: String},
-    type_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'goodstypes' //这里要写你指向的数据库表名字
-    }
+    add_time: {type: Date, default: Date.now()},
+    last_edit: {type: Date, default: Date.now()},
+    cat_logo: {type: String}
 });
 
 module.exports = mongoose.model('Category',CategorySchema);

@@ -80,12 +80,12 @@
         mounted() {
             var _this = this;
             this.axios.get('/api/findGoodsType')
-                    .then(function (response) {
-                        _this.data = response.data;
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
+            .then(function (response) {
+                _this.data = response.data;
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
         }
     };
 </script>

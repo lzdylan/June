@@ -52,36 +52,36 @@
             oSwitch: function(index) {
                 var _this = this;
                 this.axios.post('/api/updateCategory', this.data[index])
-                        .then(function (response) {
-                            _this.$Message.success('修改成功！');
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                            _this.$Message.error('修改失败！');
-                        });
+                .then(function (response) {
+                    _this.$Message.success('修改成功！');
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    _this.$Message.error('修改失败！');
+                });
             },
             remove: function (index) {
                 var _this = this;
                 this.axios.post('/api/removeCategory', {'cat_name': this.data[index].cat_name})
-                        .then(function (response) {
-                            _this.data.splice(index, 1);
-                            _this.$Message.success('删除成功！');
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                            _this.$Message.error('删除失败！');
-                        });
+                .then(function (response) {
+                    _this.data.splice(index, 1);
+                    _this.$Message.success('删除成功！');
+                })
+                .catch(function (error) {
+                    console.log(error);
+                    _this.$Message.error('删除失败！');
+                });
             }
         },
         mounted() {
             var _this = this;
             this.axios.get('/api/findCategory')
-                    .then(function (response) {
-                        _this.data = response.data;
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
+            .then(function (response) {
+                _this.data = response.data;
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
         }
     };
 </script>

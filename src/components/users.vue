@@ -1,18 +1,27 @@
 <template>
     <div class="users">
         <h3>用户列表</h3>
+        <Form ref="reqData" :model="reqData" inline :label-width="50">
+            <Form-item  label="用户名">
+                <Input v-model="reqData.user_name" placeholder="请输入用户名"></Input>
+            </Form-item>
+            <Button type="primary" @click="handleSubmit">查询</Button>
+        </Form>
         <Table :context='self' stripe :columns="columns" :data="data" size="small"></Table>
-        <Page class="page" :total="total" @on-change="changePage" @on-page-size-change="changeNumber" :current="current" :pageSize="pageSize" show-sizer></Page>
+        <Page class="page" :total="reqData.total" @on-change="changePage" @on-page-size-change="changeNumber" :current="reqData.current" :pageSize="reqData.pageSize" show-sizer></Page>
     </div>
 </template>
 <script type="text/ecmascript-6">
     export default{
         data() {
             return {
-                pageSize: 10,
-                current: 1,
-                total: 1000,
                 self: this,
+                reqData: {
+                    user_name: '',
+                    pageSize: 10,
+                    current: 1,
+                    total: 1000
+                },
                 columns: [
                     {
                         title: '昵称',
@@ -61,24 +70,12 @@
             };
         },
         mounted() {
-            var _this = this;
-            this.axios.get('api/getFindUsers', {
-                params: {
-                    pageSize: _this.pageSize,
-                    current: _this.current
-                }
-            })
-            .then(function (response) {
-                _this.data = response.data;
-                _this.data.forEach(function (value, index) {
-                    _this.data[index]['reg_time'] = _this.moment(_this.data['reg_time']).format('YYYY-MM-DD');
-                    _this.data[index]['last_login'] = _this.moment(_this.data['last_login']).format('YYYY-MM-DD');
-                });
-            }).catch(function (error) {
-                console.log(error);
-            });
+            this.loadData();
         },
         methods: {
+            handleSubmit: function () {
+                this.loadData();
+            },
             oSwitch: function(index) {
                 var _this = this;
                 this.axios.post('/api/updateUsers', this.data[index])
@@ -94,40 +91,25 @@
                 this.$router.push({path: '/usersDetail', query: {user_name: this.data[index].user_name}});
             },
             changePage: function (val) {
-                this.current = val;
+                this.reqData.current = val;
+                this.loadData();
+            },
+            changeNumber: function (val) {
+                this.reqData.pageSize = val;
+                this.loadData();
+            },
+            loadData: function () {
                 var _this = this;
-                this.axios.get('api/getFindUsers', {
-                    params: {
-                        pageSize: _this.pageSize,
-                        current: _this.current
-                    }
-                })
+                this.axios.post('/api/loadUsers', this.reqData)
                 .then(function (response) {
-                    _this.data = response.data;
+                    _this.data = response.data.res;
+                    _this.reqData.total = response.data.dataCount;
                     _this.data.forEach(function (value, index) {
                         _this.data[index]['reg_time'] = _this.moment(_this.data['reg_time']).format('YYYY-MM-DD');
                         _this.data[index]['last_login'] = _this.moment(_this.data['last_login']).format('YYYY-MM-DD');
                     });
-                }).catch(function (error) {
-                    console.log(error);
-                });
-            },
-            changeNumber: function (val) {
-                this.pageSize = val;
-                var _this = this;
-                this.axios.get('api/getFindUsers', {
-                    params: {
-                        pageSize: _this.pageSize,
-                        current: _this.current
-                    }
                 })
-                        .then(function (response) {
-                            _this.data = response.data;
-                            _this.data.forEach(function (value, index) {
-                                _this.data[index]['reg_time'] = _this.moment(_this.data['reg_time']).format('YYYY-MM-DD');
-                                _this.data[index]['last_login'] = _this.moment(_this.data['last_login']).format('YYYY-MM-DD');
-                            });
-                        }).catch(function (error) {
+                .catch(function (error) {
                     console.log(error);
                 });
             }

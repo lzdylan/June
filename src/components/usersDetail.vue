@@ -54,7 +54,7 @@
             var username = this.$route.query.user_name;
             var _this = this;
             if (username) {
-                this.axios.post('/api/postFindUsers', {'user_name': username})
+                this.axios.post('/api/editUsers', {'user_name': username})
                 .then(function (response) {
                     _this.userMessage = response.data;
                         _this.userMessage['reg_time'] = _this.moment(_this.userMessage['reg_time']).format('YYYY-MM-DD');
@@ -105,7 +105,7 @@
                 img
                     border-radius 50%
                 span
-                    color #3091f2
+                    color #464c5b
                     line-height 40px
                     font-size 16px
             .user_message
@@ -167,7 +167,7 @@
                                 width 40%
                     &.default
                         .ivu-card-body
-                            border 1px solid #3091f2
+                            border 1px solid #464c5b
                         h4
                             border-bottom 1px solid #ff9900
 </style>

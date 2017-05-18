@@ -25,7 +25,7 @@ apiRouters.post('/updateCategory', Category.updateCategory);
 apiRouters.post('/upload', Category.imgUpload);
 
 
-apiRouters.get('/getFindUsers', Users.getFindUsers);
-apiRouters.post('/postFindUsers', Users.postFindUsers);
+apiRouters.post('/loadUsers', Users.loadUsers);
+apiRouters.post('/editUsers', Users.editUsers);
 apiRouters.post('/updateUsers', Users.updateUsers);
 module.exports = apiRouters;
