@@ -41,7 +41,7 @@ exports.postFindUsers = function (request, response) {
     })
 }
 exports.editUsers = function (request, response) {
-    Users.findOne({'user_name': request.body.user_name}, function(err, res){
+    Users.findOne({'_id': request.body._id}, function(err, res){
         if (err) {
             console.log("Error:" + err);
         }
@@ -52,7 +52,7 @@ exports.editUsers = function (request, response) {
 }
 exports.updateUsers = function (request, response) {
     var goodsType = request.body;
-    Users.update({'user_name': request.body.user_name}, goodsType, function(err, desc){
+    Users.update({'_id': request.body._id}, goodsType, function(err, desc){
         if (err) {
             response.json({
                 errno: 1,

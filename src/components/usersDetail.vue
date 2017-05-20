@@ -51,10 +51,10 @@
             };
         },
         mounted() {
-            var username = this.$route.query.user_name;
+            var _id = this.$route.query._id;
             var _this = this;
-            if (username) {
-                this.axios.post('/api/editUsers', {'user_name': username})
+            if (_id) {
+                this.axios.post('/api/editUsers', {'_id': _id})
                 .then(function (response) {
                     _this.userMessage = response.data;
                         _this.userMessage['reg_time'] = _this.moment(_this.userMessage['reg_time']).format('YYYY-MM-DD');

@@ -52,7 +52,7 @@
         flex-direction row
         justify-content space-between
         height 45px
-        background #464c5b
+        background #253034
         h1
             color #fff
             line-height 44px
@@ -64,11 +64,11 @@
             display flex
             flex-direction row
             justify-content space-between
-            background #464c5b
+            background #253034
             .ivu-menu-horizontal
                 height 45px
                 line-height 45px
-                background #464c5b
+                background #253034
             .demo-badge-alone
                 background #5cb85c !important
             .demo-badge-other

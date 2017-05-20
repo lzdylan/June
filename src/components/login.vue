@@ -43,17 +43,17 @@
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
     #login
-        background -webkit-gradient(linear, 0 0, 0 bottom, from(#8E9BB9), to(#464c5b))!important
+        background: radial-gradient(35% 70%, #f9fdfe,#6d8885,#526664,#253034,#15181f); /* 标准的语法（必须放在最后） */
         display flex
         justify-content center
         align-items center
         form
-            border 1px solid #464c5b
+            border 1px solid #253034
             border-radius 10px
             padding 50px
             background #fff
             width 400px
-            box-shadow 3px 3px 10px #333
+            box-shadow 3px 3px 10px #253034
             .ivu-form-item
                 &:last-child
                     margin-bottom 0px!important

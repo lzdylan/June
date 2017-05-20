@@ -88,7 +88,7 @@
                 });
             },
             detail: function (index) {
-                this.$router.push({path: '/usersDetail', query: {user_name: this.data[index].user_name}});
+                this.$router.push({path: '/usersDetail', query: {_id: this.data[index]._id}});
             },
             changePage: function (val) {
                 this.reqData.current = val;

@@ -514,7 +514,7 @@
                 float right
                 background  #f6f6f6
                 &.cale
-                    background  #464c5b
+                    background  #253034
                     color  #fff
                     padding  3px 20px 4px
                     text-align  left
@@ -529,7 +529,7 @@
                             margin-left  15px
                 &.town
                     font-size  30px
-                    color  #464c5b
+                    color  #253034
         .content_chart
             display flex
             flex-direction row
@@ -548,7 +548,7 @@
                     padding-left  15px
         #msales
             height 300px
-            background -webkit-gradient(linear, 0 0, 0 bottom, from(#8E9BB9), to(#464c5b))!important
+            background -webkit-gradient(linear, 0 0, 0 bottom, from(#78938f), to(#253034))!important
         #recovery
             width 750px
             height 250px
