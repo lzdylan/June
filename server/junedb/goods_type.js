@@ -15,7 +15,8 @@ var GoodsTypeSchema = new mongoose.Schema({
     cat_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'categories' //这里要写你指向的数据库表名字
-    }
+    },
+    cat_name: {type: String}
 });
 
 module.exports = mongoose.model('GoodsType',GoodsTypeSchema);

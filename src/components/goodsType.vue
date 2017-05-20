@@ -15,6 +15,10 @@
                         key: 'type_name'
                     },
                     {
+                        title: '所属分类',
+                        key: 'cat_name'
+                    },
+                    {
                         title: '是否显示',
                         key: 'is_show',
                         align: 'center',
@@ -51,22 +55,22 @@
                 this.$router.push('/editGoodsType');
             },
             edit: function(index) {
-                this.$router.push({path: '/editGoodsType', query: {type_name: this.data[index].type_name}});
+                this.$router.push({path: '/editGoodsType', query: {_id: this.data[index]._id}});
             },
             oSwitch: function(index) {
                 var _this = this;
                 this.axios.post('/api/updateGoodsType', this.data[index])
-                        .then(function (response) {
-                            _this.$Message.success('修改成功！');
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                            _this.$Message.error('修改失败！');
-                        });
+                    .then(function (response) {
+                        _this.$Message.success('修改成功！');
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                        _this.$Message.error('修改失败！');
+                    });
             },
             remove: function (index) {
                 var _this = this;
-                this.axios.post('/api/removeGoodsType', {'type_name': this.data[index].type_name})
+                this.axios.post('/api/removeGoodsType', {'_id': this.data[index]._id})
                     .then(function (response) {
                         _this.data.splice(index, 1);
                         _this.$Message.success('删除成功！');
@@ -80,12 +84,12 @@
         mounted() {
             var _this = this;
             this.axios.get('/api/findGoodsType')
-            .then(function (response) {
-                _this.data = response.data;
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+                .then(function (response) {
+                    _this.data = response.data;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         }
     };
 </script>

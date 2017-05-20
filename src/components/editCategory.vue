@@ -9,6 +9,7 @@
                 <Upload
                         action="/api/upload"
                         name="cat_logo"
+                        :max-size=2048
                         :default-file-list="defaultList"
                         :on-success="handleSuccess"
                         :on-error="handleError"
@@ -56,10 +57,10 @@
             };
         },
         mounted() {
-            var catName = this.$route.query.cat_name;
+            var _id = this.$route.query._id;
             var _this = this;
-            if (catName) {
-                this.axios.post('/api/editCategory', {'cat_name': catName})
+            if (_id) {
+                this.axios.post('/api/editCategory', {'_id': _id})
                 .then(function (response) {
                     _this.formItem = response.data;
                 })
@@ -89,12 +90,16 @@
                     if (response.data.errno === 0) {
                         that.$Message.success(response.data.message, 1.5, function () {
                             that.handleReset('formItem');
-                            that.$router.push('/category');
+                            if (that.$route.query._id) {
+                                that.$router.push('/category');
+                            }
                             that.defaultList = [];
                         });
                     } else {
                         that.$Message.error(response.data.message, 1.5, function () {
-                            that.handleReset('formItem');
+                            if (!that.$route.query._id) {
+                                that.handleReset('formItem');
+                            }
                         });
                     }
                 })
@@ -107,7 +112,7 @@
                 this.$refs[name].validate(function (valid) {
                     if (valid) {
                         _this.formItem.cat_name = _this.formItem.cat_name.trim();
-                        if (_this.$route.query.cat_name) {
+                        if (_this.$route.query._id) {
                             _this.submitData('/api/updateCategory', _this);
                         } else {
                             _this.submitData('/api/addCategory', _this);

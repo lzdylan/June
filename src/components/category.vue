@@ -47,7 +47,7 @@
                 this.$router.push('/editCategory');
             },
             edit: function(index) {
-                this.$router.push({path: '/editCategory', query: {cat_name: this.data[index].cat_name}});
+                this.$router.push({path: '/editCategory', query: {_id: this.data[index]._id}});
             },
             oSwitch: function(index) {
                 var _this = this;
@@ -62,7 +62,7 @@
             },
             remove: function (index) {
                 var _this = this;
-                this.axios.post('/api/removeCategory', {'cat_name': this.data[index].cat_name})
+                this.axios.post('/api/removeCategory', {'_id': this.data[index]._id})
                 .then(function (response) {
                     _this.data.splice(index, 1);
                     _this.$Message.success('删除成功！');

@@ -14,7 +14,7 @@ exports.findGoodsType = function (request, response) {
     })
 }
 exports.removeGoodsType = function (request, response) {
-    GoodsType.findOneAndRemove({'type_name': request.body.type_name}, function(err, res){
+    GoodsType.findOneAndRemove({'_id': request.body._id}, function(err, res){
         if (err) {
             console.log("Error:" + err);
         }
@@ -24,7 +24,7 @@ exports.removeGoodsType = function (request, response) {
     })
 }
 exports.editGoodsType = function (request, response) {
-    GoodsType.findOne({'type_name': request.body.type_name}, function(err, res){
+    GoodsType.findOne({'_id': request.body._id}, function(err, res){
         if (err) {
             console.log("Error:" + err);
         }
@@ -36,7 +36,7 @@ exports.editGoodsType = function (request, response) {
 exports.updateGoodsType = function (request, response) {
     var goodsType = request.body;
     goodsType.last_edit = Date.now();
-    GoodsType.update({'type_name': request.body.type_name}, goodsType, function(err, desc){
+    GoodsType.update({'_id': request.body._id}, goodsType, function(err, desc){
         if (err) {
             response.json({
                 errno: 1,
@@ -54,7 +54,7 @@ exports.updateGoodsType = function (request, response) {
     })
 }
 exports.addGoodsType = function (request, response) {
-    GoodsType.find({'type_name': request.body.type_name}, function (err, res) {
+    GoodsType.find({'type_name': request.body.type_name, 'cat_id': request.body.cat_id}, function (err, res) {
         if (err) {
             console.log("Error:" + err);
         }

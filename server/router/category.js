@@ -19,7 +19,7 @@ exports.findCategory = function (request, response) {
     })
 }
 exports.removeCategory = function (request, response) {
-    Category.findOneAndRemove({'cat_name': request.body.cat_name}, function(err, res){
+    Category.findOneAndRemove({'_id': request.body._id}, function(err, res){
         if (err) {
             console.log("Error:" + err);
         }
@@ -29,7 +29,7 @@ exports.removeCategory = function (request, response) {
     })
 }
 exports.editCategory = function (request, response) {
-    Category.findOne({'cat_name': request.body.cat_name}, function(err, res){
+    Category.findOne({'_id': request.body._id}, function(err, res){
         if (err) {
             console.log("Error:" + err);
         }
@@ -41,6 +41,7 @@ exports.editCategory = function (request, response) {
 exports.updateCategory = function (request, response) {
     var categoryData = request.body;
     categoryData.last_edit = Date.now();
+    categoryData.cat_logo = cat_logo;
     Category.update({'cat_name': request.body.cat_name}, categoryData, function(err, desc){
         if (err) {
             response.json({

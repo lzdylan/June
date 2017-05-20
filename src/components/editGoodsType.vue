@@ -6,8 +6,8 @@
                 <Input v-model="formItem.type_name" placeholder="请输入商品类型名称"></Input>
             </Form-item>
             <Form-item label="商品分类" prop="cat_id">
-                <Select v-model="formItem.cat_id" style="width:200px">
-                    <Option v-for="item in category" :value="item._id" :key="item">{{ item.cat_name }}</Option>
+                <Select v-model="formItem.cat_id" @on-change = "cat_select" :label-in-value="true" style="width:200px">
+                    <Option v-for="item in category" :value="item._id" :key="item" :label="item.cat_name"></Option>
                 </Select>
             </Form-item>
             <Form-item label="是否显示" prop="is_show">
@@ -36,40 +36,47 @@
     export default{
         data() {
             return {
+                _id: '',
                 category: [],
                 formItem: {
                     type_name: '',
                     is_show: true,
                     show_in_nav: false,
                     cat_id: '',
+                    cat_name: '',
                     type_desc: ''
                 },
                 ruleValidate: {
                     type_name: [
                         { required: true, message: '产品类型不能为空', trigger: 'blur' }
+                    ],
+                    cat_id: [
+                        { required: true, message: '请选择产品类型', trigger: 'blur' }
                     ]
                 }
             };
         },
         mounted() {
-            var typeName = this.$route.query.type_name;
+            this._id = this.$route.query._id;
             var _this = this;
-            if (typeName) {
-                this.axios.post('/api/editGoodsType', {'type_name': typeName})
+            if (this._id) {
+                this.axios.post('/api/editGoodsType', {'_id': this._id})
                     .then(function (response) {
                         _this.formItem = response.data;
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
+                this.category = this.formItem.cat_name;
+            } else {
+                this.axios.get('/api/findCategory')
+                    .then(function (response) {
+                        _this.category = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             }
-            this.axios.get('/api/findCategory')
-                .then(function (response) {
-                    _this.category = response.data;
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
         },
         methods: {
             handleReset (name) {
@@ -78,17 +85,35 @@
             goodsType: function () {
                 this.$router.push('/goodsType');
             },
-            submitData: function (path, that) {
-                that.axios.post(path, that.formItem)
+            cat_select: function (that) {
+                var _this = this;
+                if (that.label !== '') {
+                    this.formItem.cat_name = that.label;
+                }
+                this.axios.get('/api/findCategory')
+                    .then(function (response) {
+                        _this.category = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+            },
+            submitData: function (path) {
+                var that = this;
+                this.axios.post(path, this.formItem)
                     .then(function (response) {
                         if (response.data.errno === 0) {
                             that.$Message.success(response.data.message, 1.5, function () {
                                 that.handleReset('formItem');
-                                that.$router.push('/goodsType');
+                                if (that.$route.query._id) {
+                                    that.$router.push('/goodsType');
+                                }
                             });
                         } else {
                             that.$Message.error(response.data.message, 1.5, function () {
-                                that.handleReset('formItem');
+                                if (!that.$route.query._id) {
+                                    that.handleReset('formItem');
+                                }
                             });
                         }
                     })
@@ -97,14 +122,14 @@
                     });
             },
             saveGoodsType: function (name) {
-                let _this = this;
+                var _this = this;
                 this.$refs[name].validate(function (valid) {
                     if (valid) {
                         _this.formItem.type_name = _this.formItem.type_name.trim();
-                        if (_this.$route.query.type_name) {
-                            _this.submitData('/api/updateGoodsType', _this);
+                        if (_this.$route.query._id) {
+                            _this.submitData('/api/updateGoodsType');
                         } else {
-                            _this.submitData('/api/addGoodsType', _this);
+                            _this.submitData('/api/addGoodsType');
                         }
                     } else {
                         _this.$Message.error('表单验证失败!');
