@@ -19,6 +19,8 @@ import usersCount from '@/components/usersCount';
 import salesCount from '@/components/salesCount';
 import usersDetail from '@/components/usersDetail';
 import editGoods from '@/components/editGoods';
+import brand from '@/components/brand';
+import editBrand from '@/components/editBrand';
 
 Vue.use(Router);
 Vue.use(iview);
@@ -106,6 +108,16 @@ export default new Router({
                     path: '/editGoods',
                     name: 'editGoods',
                     component: editGoods
+                },
+                {
+                    path: '/brand',
+                    name: 'brand',
+                    component: brand
+                },
+                {
+                    path: '/editBrand',
+                    name: 'editBrand',
+                    component: editBrand
                 }
             ]
         }

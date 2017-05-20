@@ -1,6 +1,6 @@
 <template>
     <div class="goods">
-        <h3>添加商品<Button type="ghost" @click="goodsList"><Icon style="margin-right:10px" type="arrow-return-left"></Icon>返回列表</Button></h3>
+        <h3>添加/编辑商品<Button type="ghost" @click="goodsList"><Icon style="margin-right:10px" type="arrow-return-left"></Icon>返回列表</Button></h3>
     </div>
 </template>
 <script type="text/ecmascript-6">

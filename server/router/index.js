@@ -6,6 +6,7 @@ var Login = require("./login.js");
 var GoodsType = require("./goodsType.js");
 var Category = require("./category.js");
 var Users = require("./users.js");
+var Brands = require("./brands.js");
 var apiRouters = express.Router();
 
 apiRouters.get('/login', Login.getLogin);
@@ -23,6 +24,13 @@ apiRouters.post('/editCategory', Category.editCategory);
 apiRouters.post('/addCategory', Category.addCategory);
 apiRouters.post('/updateCategory', Category.updateCategory);
 apiRouters.post('/upload', Category.imgUpload);
+
+apiRouters.get('/findBrand', Brands.findBrand);
+apiRouters.post('/removeBrand', Brands.removeBrand);
+apiRouters.post('/editBrand', Brands.editBrand);
+apiRouters.post('/addBrand', Brands.addBrand);
+apiRouters.post('/updateBrand', Brands.updateBrand);
+apiRouters.post('/uploadBrand', Brands.imgUpload);
 
 
 apiRouters.post('/loadUsers', Users.loadUsers);

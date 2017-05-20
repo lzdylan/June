@@ -1,6 +1,6 @@
 <template>
     <div class="goodsType">
-        <h3>添加商品类型<Button type="ghost" @click="goodsType"><Icon style="margin-right:10px" type="arrow-return-left"></Icon>返回列表</Button></h3>
+        <h3>添加/编辑商品类型<Button type="ghost" @click="goodsType"><Icon style="margin-right:10px" type="arrow-return-left"></Icon>返回列表</Button></h3>
         <Form ref="formItem" :model="formItem" :rules="ruleValidate" :label-width="180">
             <Form-item label="商品类型" prop="type_name">
                 <Input v-model="formItem.type_name" placeholder="请输入商品类型名称"></Input>
