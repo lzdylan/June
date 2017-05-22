@@ -7,18 +7,21 @@ var mongoose = require('../connection_junedb.js');
 var GoodsSchema = new mongoose.Schema({
     cat_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'categories' //这里要写你指向的数据库表名字
+        ref: 'categories' //商品分类
     },
-    types_id: {
+    cat_name: {type: String},
+    type_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'goodstypes' //这里要写你指向的数据库表名字
+        ref: 'goodstypes' //商品类型
     },
-    goods_sn: 	{type: Number},	 //商品的唯一货号
-    goods_name: 	{type: String},	 //商品的名称
+    type_name:{ type: String},
     brand_id: 	{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'brand' //这里要写你指向的数据库表名字
+        ref: 'brands' //商品品牌
     }, 	 //品牌id，取值于brand 的brand_id
+    brand_name: {type:String},
+    goods_sn: 	{type: Number},	 //商品的唯一货号
+    goods_name: 	{type: String},	 //商品的名称
     goods_number: 	{type: Number}, 	 //商品库存数量
     goods_weight: 	{type: Number}, 	 //商品的重量，以千克为单位
     market_price: 	{type: Number}, 	 //市场售价
@@ -27,14 +30,13 @@ var GoodsSchema = new mongoose.Schema({
     promote_start_date: 	{type: Date, default: Date.now()}, 	 //促销价格开始日期
     promote_end_date: 	{type: Date, default: Date.now()}, 	 //促销价格结束日期
     warn_number: 	{type: Number}, 	 //商品报警数量
-    keywords: 	{type: Array},	 //商品关键字，放在商品页的关键字中，为搜索引擎收录用
+    keywords: 	{type: String},	 //商品关键字，放在商品页的关键字中，为搜索引擎收录用
     goods_brief: 	{type: String},	 //商品的简短描述
     goods_desc: 	{type: String},	 //商品的详细描述
-    goods_thumb: 	{type: String},	 //商品在前台显示的微缩图片，如在分类筛选时显示的小图片
-    goods_img: 	{type: String},	 //商品的实际大小图片，如进入该商品页时介绍商品属性所显示的大图片
-    original_img: 	{type: String},	 //应该是上传的商品的原始图片
+    goods_thumb: 	{type: Array},	 //商品在前台显示的微缩图片，如在分类筛选时显示的小图片
+    goods_img: 	{type: Array},	 //商品的实际大小图片，如进入该商品页时介绍商品属性所显示的大图片
+    original_img: 	{type: Array},	 //应该是上传的商品的原始图片
     is_on_sale: 	{type: Boolean}, 	 //该商品是否开放销售，true，是；false，否
-    is_shipping:	{type: Number},
     add_time: 	{type: Date, default: Date.now()}, 	 //商品的添加时间
     is_best: 	{type: Boolean}, 	 //是否是精品；false，否；true，是
     is_new: 	{type: Boolean}, 	 //是否是新品

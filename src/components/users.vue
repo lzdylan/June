@@ -1,11 +1,13 @@
 <template>
     <div class="users">
         <h3>用户列表</h3>
-        <Form ref="reqData" :model="reqData" inline :label-width="50">
-            <Form-item  label="用户名">
+        <Form ref="reqData" :model="reqData" inline>
+            <Form-item  label="用户名" :label-width="50">
                 <Input v-model="reqData.user_name" placeholder="请输入用户名"></Input>
             </Form-item>
-            <Button type="primary" @click="handleSubmit">查询</Button>
+            <Form-item>
+                <Button type="primary" @click="handleSubmit">查询</Button>
+            </Form-item>
         </Form>
         <Table :context='self' stripe :columns="columns" :data="data" size="small"></Table>
         <Page class="page" :total="reqData.total" @on-change="changePage" @on-page-size-change="changeNumber" :current="reqData.current" :pageSize="reqData.pageSize" show-sizer></Page>

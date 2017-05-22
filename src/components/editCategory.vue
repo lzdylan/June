@@ -7,7 +7,7 @@
             </Form-item>
             <Form-item label="分类LOGO" prop="cat_logo">
                 <Upload
-                        action="/api/upload"
+                        action="/api/uploadCategory"
                         name="cat_logo"
                         :max-size=2048
                         :default-file-list="defaultList"
