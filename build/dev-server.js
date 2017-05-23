@@ -64,6 +64,7 @@ app.use(devMiddleware)
 app.use(hotMiddleware)
 
 // serve pure static assets
+app.use('/upload', express.static('upload'));
 var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
 

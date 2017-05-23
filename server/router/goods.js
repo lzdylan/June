@@ -5,6 +5,8 @@ var Goods = require("../junedb/goods.js");
 var muilter  = require('../multerUtil');
 var gm = require('gm');
 var imageMagick = gm.subClass({ imageMagick : true });
+var original_img = '';
+var goods_thumb = '';
 var goods_img = '';
 var upload = muilter.single('original_img');
 
@@ -58,7 +60,9 @@ exports.editGoods = function (request, response) {
 exports.updateGoods = function (request, response) {
     var goodsData = request.body;
     goodsData.last_edit = Date.now();
-    goodsData.original_img = goods_img;
+    goodsData.original_img.push(original_img);
+    goodsData.goods_thumb.push(goods_thumb);
+    goodsData.goods_img.push(goods_img);
     Goods.update({'goods_name': request.body.goods_name}, goodsData, function(err, desc){
         if (err) {
             response.json({
@@ -85,7 +89,9 @@ exports.addGoods = function (request, response) {
         else {
             if(res.length === 0) {
                 var goodsData = new Goods(request.body);
-                goodsData.goods_img = goods_img;
+                goodsData.original_img.push(original_img);
+                goodsData.goods_thumb.push(goods_thumb);
+                goodsData.goods_img.push(goods_img);
                 goodsData.save(function(err, desc){
                     if (err) {
                         response.json({
@@ -124,12 +130,13 @@ exports.imgUpload = function (request, response) {
             return
         }
         var path = request.file.path;
-        goods_img = 'upload/goods/'+request.file.filename;
+        original_img = 'upload/images/'+request.file.filename;
+        goods_thumb = 'upload/goods/thumb/'+request.file.filename;
+        goods_img = 'upload/goods/middle/'+request.file.filename;
         imageMagick(path)
             .resize(150, 150)
             .autoOrient()
-            .write('upload/goods/thumb/'+request.file.filename, function(err){
-                console.log(request.file);
+            .write(goods_thumb, function(err){
                 if (err) {
                     console.log(err);
                 }
@@ -137,8 +144,7 @@ exports.imgUpload = function (request, response) {
         imageMagick(path)
             .resize(800, 800)
             .autoOrient()
-            .write('upload/goods/middle/'+request.file.filename, function(err){
-                console.log(request.file);
+            .write(goods_img, function(err){
                 if (err) {
                     console.log(err);
                 }

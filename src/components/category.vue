@@ -11,6 +11,14 @@
                 self: this,
                 columns: [
                     {
+                        title: '分类LOGO',
+                        key: 'cat_logo',
+                        align: 'center',
+                        render (row, column, index) {
+                            return `<img width="50" :src="data[${index}].cat_logo">`;
+                        }
+                    },
+                    {
                         title: '名称',
                         key: 'cat_name'
                     },

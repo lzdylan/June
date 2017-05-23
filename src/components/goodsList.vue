@@ -26,6 +26,14 @@
                 },
                 columns: [
                     {
+                        title: '商品图片',
+                        key: 'goods_thumb',
+                        align: 'center',
+                        render (row, column, index) {
+                            return `<img width="50" :src="data[${index}].goods_thumb[0]">`;
+                        }
+                    },
+                    {
                         title: '名称',
                         key: 'goods_name'
                     },
@@ -83,6 +91,7 @@
                     },
                     {
                         title: '操作',
+                        width: 120,
                         key: 'action',
                         align: 'center',
                         render (row, column, index) {

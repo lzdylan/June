@@ -11,6 +11,14 @@
                 self: this,
                 columns: [
                     {
+                        title: '品牌LOGO',
+                        key: 'brand_logo',
+                        align: 'center',
+                        render (row, column, index) {
+                            return `<img width="50" :src="data[${index}].brand_logo">`;
+                        }
+                    },
+                    {
                         title: '名称',
                         key: 'brand_name'
                     },
