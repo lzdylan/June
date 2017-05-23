@@ -62,6 +62,10 @@
                         }
                     },
                     {
+                        title: '商品成本',
+                        key: 'cost'
+                    },
+                    {
                         title: '品牌名称',
                         key: 'brand_name'
                     },

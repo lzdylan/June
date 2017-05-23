@@ -5,14 +5,14 @@
             <Row type="flex" justify="center">
                 <Col span="20">
                 <Form-item label="商品名称：" prop="goods_name">
-                    <Input v-model="formItem.goods_name" placeholder="请输入"></Input>
+                    <Input v-model="formItem.goods_name" placeholder="请输入商品名称"></Input>
                 </Form-item>
                 </Col>
             </Row>
             <Row type="flex" justify="center">
                 <Col span="10">
                     <Form-item label="商品品牌：" prop="brand_id">
-                        <Select v-model="formItem.brand_id" @on-change = "brand_select" :label-in-value="true" style="width:200px">
+                        <Select ref="brands"  v-model="formItem.brand_id" placeholder="请选择商品品牌" @on-change = "brand_select" :label-in-value="true" >
                             <Option v-for="item in brands" :value="item._id" :key="item" :label="item.brand_name"></Option>
                         </Select>
                     </Form-item>
@@ -28,8 +28,8 @@
             </Row>
             <Row type="flex" justify="center">
                 <Col span="10">
-                <Form-item label="商品分类：" prop="cat_id">
-                    <Select v-model="formItem.cat_id" @on-change = "cat_select" :label-in-value="true" style="width:200px">
+                <Form-item ref="category"  label="商品分类：" prop="cat_id">
+                    <Select v-model="formItem.cat_id" placeholder="请选择商品分类" @on-change = "cat_select" :label-in-value="true" >
                         <Option v-for="item in category" :value="item._id" :key="item" :label="item.cat_name"></Option>
                     </Select>
                 </Form-item>
@@ -45,8 +45,8 @@
             </Row>
             <Row type="flex" justify="center">
                 <Col span="10">
-                    <Form-item label="商品类型：" prop="type_id">
-                        <Select v-model="formItem.type_id" @on-change = "type_select" :label-in-value="true" style="width:200px">
+                    <Form-item ref="goodsType"  label="商品类型：" prop="type_id">
+                        <Select v-model="formItem.type_id" placeholder="请选择商品类型" @on-change = "type_select" :label-in-value="true" >
                             <Option v-for="item in goodsType" :value="item._id" :key="item" :label="item.type_name"></Option>
                         </Select>
                     </Form-item>
@@ -57,6 +57,58 @@
                         <span slot="open">是</span>
                         <span slot="close">否</span>
                     </i-switch>
+                </Form-item>
+                </Col>
+            </Row>
+            <Row type="flex" justify="center">
+                <Col span="10">
+                <Form-item label="商品成本：" prop="cost">
+                    <Input v-model="formItem.cost" placeholder="请输入商品成本"></Input>
+                </Form-item>
+                </Col>
+                <Col span="10">
+                <Form-item label="上架/下架：" prop="is_on_sale">
+                    <i-switch v-model="formItem.is_on_sale" size="large">
+                        <span slot="open">是</span>
+                        <span slot="close">否</span>
+                    </i-switch>
+                </Form-item>
+                </Col>
+            </Row>
+            <Row type="flex" justify="center">
+                <Col span="20">
+                <Form-item label="关键字：" prop="keywords">
+                    <Input v-model="formItem.keywords" placeholder="请输入商品关键字中间用空格隔开"></Input>
+                </Form-item>
+                </Col>
+            </Row>
+            <Row type="flex" justify="center">
+                <Col span="10">
+                <Form-item label="是否促销：" prop="is_promote">
+                    <i-switch v-model="formItem.is_promote" size="large">
+                        <span slot="open">是</span>
+                        <span slot="close">否</span>
+                    </i-switch>
+                </Form-item>
+                </Col>
+                <Col span="10">
+
+                </Col>
+            </Row>
+            <Row type="flex" justify="center" v-if="formItem.is_promote">
+                <Col span="5">
+                <Form-item label="开始日期时间：" prop="promote_start_date">
+                    <Date-picker type="datetime" placeholder="选择开始日期和时间"  v-model="formItem.promote_start_date"></Date-picker>
+                </Form-item>
+                </Col>
+                <Col span="5">
+                <Form-item label="结束日期时间：" prop="promote_end_date">
+                    <Date-picker type="datetime" placeholder="选择结束日期和时间" v-model="formItem.promote_end_date"></Date-picker>
+                </Form-item>
+                </Col>
+                <Col span="10">
+                <Form-item label="促销价格：" prop="promote_price">
+                    <Input v-model="formItem.promote_price" placeholder="请输入促销价格"></Input>
                 </Form-item>
                 </Col>
             </Row>
@@ -90,91 +142,53 @@
             </Row>
             <Row type="flex" justify="center">
                 <Col span="10">
-                <Form-item label="上架/下架：" prop="is_on_sale">
-                    <i-switch v-model="formItem.is_on_sale" size="large">
-                        <span slot="open">是</span>
-                        <span slot="close">否</span>
-                    </i-switch>
-                </Form-item>
-                </Col>
-                <Col span="10">
-                <Form-item label="是否促销：" prop="is_promote">
-                    <i-switch v-model="formItem.is_promote" size="large">
-                        <span slot="open">是</span>
-                        <span slot="close">否</span>
-                    </i-switch>
-                </Form-item>
-                </Col>
-            </Row>
-            <Row type="flex" justify="center" v-if="formItem.is_promote">
-                <Col span="10">
-                <Form-item label="促销价格：" prop="promote_price">
-                    <Input v-model="formItem.promote_price" placeholder="请输入"></Input>
-                </Form-item>
-                </Col>
-                <Col span="5">
-                <Form-item label="开始日期时间：" prop="promote_start_date">
-                    <Date-picker type="datetime" placeholder="选择日期和时间"  v-model="formItem.promote_start_date"></Date-picker>
-                </Form-item>
-                </Col>
-                <Col span="5">
-                <Form-item label="结束日期时间：" prop="promote_end_date">
-                    <Date-picker type="datetime" placeholder="选择日期和时间" v-model="formItem.promote_end_date"></Date-picker>
-                </Form-item>
-                </Col>
-            </Row>
-            <Row type="flex" justify="center">
-                <Col span="10">
                 <Form-item label="库存数量：" porp="goods_number">
-                    <Input v-model="formItem.goods_number" placeholder="请输入"></Input>
+                    <Input v-model="formItem.goods_number" placeholder="请输入库存数量"></Input>
                 </Form-item>
                 </Col>
                 <Col span="10">
                 <Form-item label="商品重量：" prop="goods_weight">
-                    <Input v-model="formItem.goods_weight" placeholder="请输入"></Input>
+                    <Input v-model="formItem.goods_weight" placeholder="请输入商品重量"></Input>
                 </Form-item>
                 </Col>
             </Row>
             <Row type="flex" justify="center">
                 <Col span="10">
                 <Form-item label="市场售价：" prop="market_price">
-                    <Input v-model="formItem.market_price" placeholder="请输入"></Input>
+                    <Input v-model="formItem.market_price" placeholder="请输入市场售价"></Input>
                 </Form-item>
                 </Col>
                 <Col span="10">
                 <Form-item label="本店售价：" prop="shop_price">
-                    <Input v-model="formItem.shop_price" placeholder="请输入"></Input>
+                    <Input v-model="formItem.shop_price" placeholder="请输入本店售价"></Input>
                 </Form-item>
                 </Col>
             </Row>
             <Row type="flex" justify="center">
                 <Col span="10">
                     <Form-item label="库存报警：" prop="warn_number">
-                        <Input v-model="formItem.warn_number" placeholder="请输入"></Input>
+                        <Input v-model="formItem.warn_number" placeholder="请输入库存报警"></Input>
                     </Form-item>
                 </Col>
                 <Col span="10">
-                    <Form-item label="关键字：" prop="keywords">
-                        <Input v-model="formItem.keywords" placeholder="请输入"></Input>
-                    </Form-item>
+                <Form-item label="赠送积分：" prop="give_integral">
+                    <Input v-model="formItem.give_integral" placeholder="请输入赠送积分"></Input>
+                </Form-item>
                 </Col>
             </Row>
             <Row type="flex" justify="center">
                 <Col span="10">
-                <Form-item label="赠送积分：" prop="give_integral">
-                    <Input v-model="formItem.give_integral" placeholder="请输入"></Input>
+                <Form-item label="商品商家：" prop="seller_note">
+                    <Input v-model="formItem.seller_note" placeholder="请输入商品商家"></Input>
                 </Form-item>
                 </Col>
                 <Col span="10">
-                    <Form-item label="商品商家：" prop="seller_note">
-                        <Input v-model="formItem.seller_note" placeholder="请输入"></Input>
-                    </Form-item>
                 </Col>
             </Row>
             <Row type="flex" justify="center">
                 <Col span="20">
                 <Form-item label="商品描述：" prop="goods_brief">
-                    <Input v-model="formItem.goods_brief" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入..."></Input>
+                    <Input v-model="formItem.goods_brief" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="请输入商品描述..."></Input>
                 </Form-item>
                 </Col>
             </Row>
@@ -208,14 +222,15 @@
                     brand_id: '',
                     brand_name: '',
                     goods_name: '', //  商品的名称
-                    goods_number: 0,    //  商品库存数量
-                    goods_weight: 0,    //  商品的重量，以千克为单位
-                    market_price: 0,    //  市场售价
-                    shop_price: 0,  //  本店售价
-                    promote_price: 0,   //  促销价格
+                    goods_number: null,    //  商品库存数量
+                    goods_weight: null,    //  商品的重量，以千克为单位
+                    market_price: null,    //  市场售价
+                    shop_price: null,  //  本店售价
+                    promote_price: null,   //  促销价格
+                    cost: null, // 商品成本
                     promote_start_date: '',     //  促销价格开始日期
                     promote_end_date: '',   //  促销价格结束日期
-                    warn_number: 0,     //  商品报警数量
+                    warn_number: null,     //  商品报警数量
                     keywords: '',   //  商品关键字，放在商品页的关键字中，为搜索引擎收录用
                     goods_brief: '',    //  商品的简短描述
                     goods_desc: '', //  商品的详细描述
@@ -223,14 +238,12 @@
                     goods_img: [],  //  商品的实际大小图片，如进入该商品页时介绍商品属性所显示的大图片
                     original_img: [],   //  应该是上传的商品的原始图片
                     is_on_sale: true,   //  该商品是否开放销售，true，是；false，否
-                    add_time: '',   //  商品的添加时间
                     is_best: true,  //  是否是精品；false，否；true，是
                     is_new: true,   //  是否是新品
                     is_hot: true,   //  是否热销，false，否；true，是
                     is_promote: true,   //  是否特价促销；false，否；true，是
-                    last_update: '',    //  最近一次更新商品配置的时间
                     seller_note: '',    //  商品的商家备注，仅商家可见
-                    give_integral: 0   //  购买该商品时每笔成功交易赠送的积分数量
+                    give_integral: null   //  购买该商品时每笔成功交易赠送的积分数量
                 },
                 ruleValidate: {
                     goods_name: [
@@ -260,21 +273,9 @@
                             console.log(error);
                         });
                 this.category = this.formItem.cat_name;
+                this.brands = this.formItem.brand_name;
+                this.goodsType = this.formItem.type_name;
             } else {
-                this.axios.get('/api/findCategory')
-                        .then(function (response) {
-                            _this.category = response.data;
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
-                this.axios.get('/api/findGoodsType')
-                        .then(function (response) {
-                            _this.goodsType = response.data;
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
                 this.axios.get('/api/findBrand')
                         .then(function (response) {
                             _this.brands = response.data;
@@ -296,26 +297,14 @@
                 if (that.label !== '') {
                     this.formItem.cat_name = that.label;
                 }
-                this.axios.get('/api/findCategory')
+                this.axios.post('/api/findCategory', {'brand_id': this.formItem.brand_id})
                         .then(function (response) {
                             _this.category = response.data;
                         })
                         .catch(function (error) {
                             console.log(error);
                         });
-            },
-            type_select: function (that) {
-                var _this = this;
-                if (that.label !== '') {
-                    this.formItem.type_name = that.label;
-                }
-                this.axios.get('/api/findGoodsType')
-                        .then(function (response) {
-                            _this.goodsType = response.data;
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
+                this.type_select(this.$refs['goodsType']);
             },
             brand_select: function (that) {
                 var _this = this;
@@ -325,6 +314,20 @@
                 this.axios.get('/api/findBrand')
                         .then(function (response) {
                             _this.brands = response.data;
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                this.cat_select(this.$refs['category']);
+            },
+            type_select: function (that) {
+                var _this = this;
+                if (that.label !== '') {
+                    this.formItem.type_name = that.label;
+                }
+                this.axios.post('/api/findGoodsType', {'cat_id': this.formItem.cat_id})
+                        .then(function (response) {
+                            _this.goodsType = response.data;
                         })
                         .catch(function (error) {
                             console.log(error);

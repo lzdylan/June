@@ -13,13 +13,13 @@ var apiRouters = express.Router();
 apiRouters.get('/login', Login.getLogin);
 apiRouters.post('/login', Login.postLogin);
 //商品类型
-apiRouters.get('/findGoodsType', GoodsType.findGoodsType);
+apiRouters.post('/findGoodsType', GoodsType.findGoodsType);
 apiRouters.post('/removeGoodsType', GoodsType.removeGoodsType);
 apiRouters.post('/updateGoodsType', GoodsType.updateGoodsType);
 apiRouters.post('/editGoodsType', GoodsType.editGoodsType);
 apiRouters.post('/addGoodsType', GoodsType.addGoodsType);
 //商品分类
-apiRouters.get('/findCategory', Category.findCategory);
+apiRouters.post('/findCategory', Category.findCategory);
 apiRouters.post('/removeCategory', Category.removeCategory);
 apiRouters.post('/editCategory', Category.editCategory);
 apiRouters.post('/addCategory', Category.addCategory);

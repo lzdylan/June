@@ -5,8 +5,13 @@
             <Form-item label="商品类型" prop="type_name">
                 <Input v-model="formItem.type_name" placeholder="请输入商品类型名称"></Input>
             </Form-item>
+            <Form-item label="商品品牌" prop="brand_id">
+                <Select ref="brands" v-model="formItem.brand_id" @on-change = "brand_select" :label-in-value="true" style="width:200px">
+                    <Option v-for="item in brands" :value="item._id" :key="item" :label="item.brand_name"></Option>
+                </Select>
+            </Form-item>
             <Form-item label="商品分类" prop="cat_id">
-                <Select v-model="formItem.cat_id" @on-change = "cat_select" :label-in-value="true" style="width:200px">
+                <Select ref="category" v-model="formItem.cat_id" @on-change = "cat_select" :label-in-value="true" style="width:200px">
                     <Option v-for="item in category" :value="item._id" :key="item" :label="item.cat_name"></Option>
                 </Select>
             </Form-item>
@@ -38,12 +43,15 @@
             return {
                 _id: '',
                 category: [],
+                brands: [],
                 formItem: {
                     type_name: '',
                     is_show: true,
                     show_in_nav: false,
                     cat_id: '',
                     cat_name: '',
+                    brand_id: '',
+                    brand_name: '',
                     type_desc: ''
                 },
                 ruleValidate: {
@@ -51,7 +59,10 @@
                         { required: true, message: '产品类型不能为空', trigger: 'blur' }
                     ],
                     cat_id: [
-                        { required: true, message: '请选择产品类型', trigger: 'blur' }
+                        { required: true, message: '请选择产品所属分类', trigger: 'blur' }
+                    ],
+                    brand_id: [
+                        { required: true, message: '请选择产品所属品牌', trigger: 'blur' }
                     ]
                 }
             };
@@ -68,10 +79,11 @@
                         console.log(error);
                     });
                 this.category = this.formItem.cat_name;
+                this.brands = this.formItem.brand_name;
             } else {
-                this.axios.get('/api/findCategory')
+                this.axios.get('/api/findBrand')
                     .then(function (response) {
-                        _this.category = response.data;
+                        _this.brands = response.data;
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -90,13 +102,27 @@
                 if (that.label !== '') {
                     this.formItem.cat_name = that.label;
                 }
-                this.axios.get('/api/findCategory')
+                this.axios.post('/api/findCategory', {'brand_id': this.formItem.brand_id})
                     .then(function (response) {
                         _this.category = response.data;
                     })
                     .catch(function (error) {
                         console.log(error);
                     });
+            },
+            brand_select: function (that) {
+                var _this = this;
+                if (that.label !== '') {
+                    this.formItem.brand_name = that.label;
+                }
+                this.axios.get('/api/findBrand')
+                    .then(function (response) {
+                        _this.brands = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                this.cat_select(this.$refs['category']);
             },
             submitData: function (path) {
                 var that = this;

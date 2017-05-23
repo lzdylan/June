@@ -23,6 +23,10 @@
                         }
                     },
                     {
+                        title: '所属品牌',
+                        key: 'brand_name'
+                    },
+                    {
                         title: '计量单位',
                         key: 'measure_unit'
                     },
@@ -75,7 +79,7 @@
         },
         mounted() {
             var _this = this;
-            this.axios.get('/api/findCategory')
+            this.axios.post('/api/findCategory')
             .then(function (response) {
                 _this.data = response.data;
             })

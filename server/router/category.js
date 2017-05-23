@@ -9,7 +9,8 @@ var cat_logo = '';
 var upload = muilter.single('cat_logo');
 
 exports.findCategory = function (request, response) {
-    Category.find(function(err, res){
+    var condition = request.body.brand_id ? {'brand_id': request.body.brand_id} : {};
+    Category.find(condition, function(err, res){
         if (err) {
             console.log("Error:" + err);
         }

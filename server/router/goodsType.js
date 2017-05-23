@@ -4,7 +4,8 @@
 var GoodsType = require("../junedb/goods_type.js");
 
 exports.findGoodsType = function (request, response) {
-    GoodsType.find(function(err, res){
+    var condition = request.body.cat_id ? {'cat_id': request.body.cat_id} : {};
+    GoodsType.find(condition, function(err, res){
         if (err) {
             console.log("Error:" + err);
         }

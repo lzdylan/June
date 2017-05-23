@@ -5,6 +5,11 @@
             <Form-item label="商品分类" prop="cat_name">
                 <Input v-model="formItem.cat_name" placeholder="请输入商品分类名称"></Input>
             </Form-item>
+            <Form-item label="所属品牌" prop="brand_id">
+                <Select v-model="formItem.brand_id" @on-change = "brand_select" :label-in-value="true" style="width:200px">
+                    <Option v-for="item in brands" :value="item._id" :key="item" :label="item.brand_name"></Option>
+                </Select>
+            </Form-item>
             <Form-item label="分类LOGO" prop="cat_logo">
                 <Upload
                         action="/api/uploadCategory"
@@ -42,12 +47,15 @@
             return {
                 type: [],
                 defaultList: [],
+                brands: [],
                 formItem: {
                     cat_name: '',
                     is_show: true,
                     measure_unit: '',
                     cat_logo: '',
-                    cat_desc: ''
+                    cat_desc: '',
+                    brand_id: '',
+                    brand_name: ''
                 },
                 ruleValidate: {
                     cat_name: [
@@ -67,6 +75,15 @@
                 .catch(function (error) {
                     console.log(error);
                 });
+                this.brands = this.formItem.brand_name;
+            } else {
+                this.axios.get('/api/findBrand')
+                    .then(function (response) {
+                        _this.brands = response.data;
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
             }
         },
         methods: {
@@ -83,6 +100,20 @@
             },
             category: function () {
                 this.$router.push('/category');
+            },
+            brand_select: function (that) {
+                console.log(123);
+                var _this = this;
+                if (that.label !== '') {
+                    this.formItem.brand_name = that.label;
+                }
+                this.axios.get('/api/findBrand')
+                        .then(function (response) {
+                            _this.brands = response.data;
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
             },
             submitData: function (path, that) {
                 that.axios.post(path, that.formItem)

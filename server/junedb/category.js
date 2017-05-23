@@ -11,7 +11,12 @@ var CategorySchema = new mongoose.Schema({
     is_show: {type: Boolean, default: false},                   //是否在前台页面显示 true显示; false不显示
     add_time: {type: Date, default: Date.now()},
     last_edit: {type: Date, default: Date.now()},
-    cat_logo: {type: String}
+    cat_logo: {type: String},
+    brand_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'categories' //这里要写你指向的数据库表名字
+    },
+    brand_name: {type: String}
 });
 
 module.exports = mongoose.model('Category',CategorySchema);

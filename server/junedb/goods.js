@@ -26,6 +26,7 @@ var GoodsSchema = new mongoose.Schema({
     goods_weight: 	{type: Number}, 	 //商品的重量，以千克为单位
     market_price: 	{type: Number}, 	 //市场售价
     shop_price: 	{type: Number}, 	 //本店售价
+    cost: {type:String}, //商品成本
     promote_price: 	{type: Number}, 	 //促销价格
     promote_start_date: 	{type: Date, default: Date.now()}, 	 //促销价格开始日期
     promote_end_date: 	{type: Date, default: Date.now()}, 	 //促销价格结束日期
@@ -42,7 +43,7 @@ var GoodsSchema = new mongoose.Schema({
     is_new: 	{type: Boolean}, 	 //是否是新品
     is_hot: 	{type: Boolean}, 	 //是否热销，false，否；true，是
     is_promote: 	{type: Boolean}, 	 //是否特价促销；false，否；true，是
-    last_update: 	{type: Date, default: Date.now()}, 	 //最近一次更新商品配置的时间
+    last_edit: 	{type: Date, default: Date.now()}, 	 //最近一次更新商品配置的时间
     seller_note: 	{type: String},	 //商品的商家备注，仅商家可见
     give_integral:	{type: Number}	 //购买该商品时每笔成功交易赠送的积分数量
 });

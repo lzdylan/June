@@ -15,6 +15,10 @@
                         key: 'type_name'
                     },
                     {
+                        title: '所属品牌',
+                        key: 'brand_name'
+                    },
+                    {
                         title: '所属分类',
                         key: 'cat_name'
                     },
@@ -83,7 +87,7 @@
         },
         mounted() {
             var _this = this;
-            this.axios.get('/api/findGoodsType')
+            this.axios.post('/api/findGoodsType')
                 .then(function (response) {
                     _this.data = response.data;
                 })
