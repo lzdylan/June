@@ -30,7 +30,7 @@
                         key: 'goods_thumb',
                         align: 'center',
                         render (row, column, index) {
-                            return `<img width="50" :src="data[${index}].goods_thumb[0]">`;
+                            return `<img width="50" v-if="data[${index}]" :src="data[${index}].goods_thumb[0]">`;
                         }
                     },
                     {

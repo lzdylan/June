@@ -9,7 +9,8 @@ var original_img = '';
 var goods_thumb = '';
 var goods_img = '';
 var upload = muilter.single('original_img');
-
+var goods_req = null;
+var goods_res = null;
 exports.findGoods = function (request, response) {
     var dataCount = 0;
     var condition = '';
@@ -88,25 +89,58 @@ exports.addGoods = function (request, response) {
         }
         else {
             if(res.length === 0) {
-                var goodsData = new Goods(request.body);
-                goodsData.original_img.push(original_img);
-                goodsData.goods_thumb.push(goods_thumb);
-                goodsData.goods_img.push(goods_img);
-                goodsData.save(function(err, desc){
+                upload(goods_req, goods_res, function (err) {
                     if (err) {
+                        // 发生错误
                         response.json({
                             errno: 1,
-                            message: '添加失败!',
-                            desc: desc
+                            message: '上传失败!'
                         });
+                        return
                     }
-                    else {
-                        response.json({
-                            errno: 0,
-                            message: '添加成功!',
-                            desc: desc
+                    var path = goods_req.file.path;
+                    original_img = 'upload/images/'+goods_req.file.filename;
+                    goods_thumb = 'upload/goods/thumb/'+goods_req.file.filename;
+                    goods_img = 'upload/goods/middle/'+goods_req.file.filename;
+                    imageMagick(path)
+                        .resize(150, 150)
+                        .autoOrient()
+                        .write(goods_thumb, function(err){
+                            if (err) {
+                                console.log(err);
+                            }
                         });
+                    imageMagick(path)
+                        .resize(800, 800)
+                        .autoOrient()
+                        .write(goods_img, function(err){
+                            if (err) {
+                                console.log(err);
+                            }
+                        });
+                    var goodsData = new Goods(request.body);
+                    console.log(goods_req.file.filename);
+                    if(goods_req.file.filename !== '') {
+                        goodsData.original_img.push(original_img);
+                        goodsData.goods_thumb.push(goods_thumb);
+                        goodsData.goods_img.push(goods_img);
                     }
+                    goodsData.save(function(err, desc){
+                        if (err) {
+                            response.json({
+                                errno: 1,
+                                message: '添加失败!',
+                                desc: desc
+                            });
+                        }
+                        else {
+                            response.json({
+                                errno: 0,
+                                message: '添加成功!',
+                                desc: desc
+                            });
+                        }
+                    })
                 })
             }else {
                 response.json({
@@ -118,41 +152,7 @@ exports.addGoods = function (request, response) {
         }
     })
 }
-
 exports.imgUpload = function (request, response) {
-    upload(request, response, function (err) {
-        if (err) {
-            // 发生错误
-            response.json({
-                errno: 1,
-                message: '上传失败!'
-            });
-            return
-        }
-        var path = request.file.path;
-        original_img = 'upload/images/'+request.file.filename;
-        goods_thumb = 'upload/goods/thumb/'+request.file.filename;
-        goods_img = 'upload/goods/middle/'+request.file.filename;
-        imageMagick(path)
-            .resize(150, 150)
-            .autoOrient()
-            .write(goods_thumb, function(err){
-                if (err) {
-                    console.log(err);
-                }
-            });
-        imageMagick(path)
-            .resize(800, 800)
-            .autoOrient()
-            .write(goods_img, function(err){
-                if (err) {
-                    console.log(err);
-                }
-            });
-        response.json({
-            errno: 0,
-            message: '上传成功!'
-        });
-        // 一切都好
-    })
+    goods_req = request;
+    goods_res = response;
 }

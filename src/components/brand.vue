@@ -15,7 +15,7 @@
                         key: 'brand_logo',
                         align: 'center',
                         render (row, column, index) {
-                            return `<img width="50" :src="data[${index}].brand_logo">`;
+                            return `<img width="50" v-if="data[${index}]" :src="data[${index}].brand_logo">`;
                         }
                     },
                     {

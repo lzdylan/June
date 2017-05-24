@@ -7,7 +7,8 @@ var gm = require('gm');
 var imageMagick = gm.subClass({ imageMagick : true });
 var cat_logo = '';
 var upload = muilter.single('cat_logo');
-
+var cat_req = null;
+var cat_res = null;
 exports.findCategory = function (request, response) {
     var condition = request.body.brand_id ? {'brand_id': request.body.brand_id} : {};
     Category.find(condition, function(err, res){
@@ -67,23 +68,43 @@ exports.addCategory = function (request, response) {
         }
         else {
             if(res.length === 0) {
-                var categoryData = new Category(request.body);
-                categoryData.cat_logo = cat_logo;
-                categoryData.save(function(err, desc){
+                upload(cat_req, cat_res, function (err) {
                     if (err) {
+                        // 发生错误
                         response.json({
                             errno: 1,
-                            message: '添加失败!',
-                            desc: desc
+                            message: '上传失败!'
                         });
+                        return
                     }
-                    else {
-                        response.json({
-                            errno: 0,
-                            message: '添加成功!',
-                            desc: desc
+                    var path = cat_req.file.path;
+                    cat_logo = 'upload/category/'+cat_req.file.filename;
+                    imageMagick(path)
+                        .resize(150, 150)
+                        .autoOrient()
+                        .write(cat_logo, function(err){
+                            if (err) {
+                                console.log(err);
+                            }
                         });
-                    }
+                    var categoryData = new Category(request.body);
+                    categoryData.cat_logo = cat_logo;
+                    categoryData.save(function(err, desc){
+                        if (err) {
+                            response.json({
+                                errno: 1,
+                                message: '添加失败!',
+                                desc: desc
+                            });
+                        }
+                        else {
+                            response.json({
+                                errno: 0,
+                                message: '添加成功!',
+                                desc: desc
+                            });
+                        }
+                    })
                 })
             }else {
                 response.json({
@@ -97,30 +118,6 @@ exports.addCategory = function (request, response) {
 }
 
 exports.imgUpload = function (request, response) {
-    upload(request, response, function (err) {
-        if (err) {
-            // 发生错误
-            response.json({
-                errno: 1,
-                message: '上传失败!'
-            });
-            return
-        }
-        var path = request.file.path;
-        cat_logo = 'upload/category/'+request.file.filename;
-        imageMagick(path)
-            .resize(150, 150)
-            .autoOrient()
-            .write('upload/category/'+request.file.filename, function(err){
-                console.log(request.file);
-                if (err) {
-                    console.log(err);
-                }
-            });
-        response.json({
-            errno: 0,
-            message: '上传成功!'
-        });
-        // 一切都好
-    })
+    cat_req = request;
+    cat_res = response;
 }
