@@ -28,8 +28,8 @@
             </Row>
             <Row type="flex" justify="center">
                 <Col span="10">
-                <Form-item ref="category"  label="商品分类：" prop="cat_id">
-                    <Select v-model="formItem.cat_id" placeholder="请选择商品分类" @on-change = "cat_select" :label-in-value="true" >
+                <Form-item  label="商品分类：" prop="cat_id">
+                    <Select ref="category" v-model="formItem.cat_id" placeholder="请选择商品分类" @on-change = "cat_select" :label-in-value="true" >
                         <Option v-for="item in category" :value="item._id" :key="item" :label="item.cat_name"></Option>
                     </Select>
                 </Form-item>
@@ -45,8 +45,8 @@
             </Row>
             <Row type="flex" justify="center">
                 <Col span="10">
-                    <Form-item ref="goodsType"  label="商品类型：" prop="type_id">
-                        <Select v-model="formItem.type_id" placeholder="请选择商品类型" @on-change = "type_select" :label-in-value="true" >
+                    <Form-item  label="商品类型：" prop="type_id">
+                        <Select ref="goodsType" v-model="formItem.type_id" placeholder="请选择商品类型" @on-change = "type_select" :label-in-value="true" >
                             <Option v-for="item in goodsType" :value="item._id" :key="item" :label="item.type_name"></Option>
                         </Select>
                     </Form-item>
@@ -114,12 +114,12 @@
             </Row>
             <Row type="flex" justify="center">
                 <Col span="20">
-                <Form-item label="商品图片：" prop="original_img">
-                    <div class="demo-upload-list" v-for="item in uploadList">
-                        <template v-if="item.status === 'finished'">
-                            <img :src="item.url">
+                <Form-item label="商品图片：" prop="goods_img">
+                    <div class="demo-upload-list" v-for="item in formItem.goods_img">
+                        <template v-if="item">
+                            <img v-if="item" :src="item">
                             <div class="demo-upload-list-cover">
-                                <Icon type="ios-eye-outline" @click.native="handleView(item.name)"></Icon>
+                                <Icon type="ios-eye-outline" @click.native="handleView(item)"></Icon>
                                 <Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
                             </div>
                         </template>
@@ -129,32 +129,28 @@
                     </div>
                     <Upload
                             ref="upload"
-                            name="original_img"
-                            :show-upload-list="true"
-                            :default-file-list="defaultList"
+                            action="/api/uploadGoods"
+                            name="goods_img"
+                            :show-upload-list="false"
+                            :max-size=2048
                             :on-success="handleSuccess"
-                            :format="['jpg','jpeg','png']"
-                            :max-size="2048"
+                            :on-error="handleError"
                             :on-format-error="handleFormatError"
                             :on-exceeded-size="handleMaxSize"
                             :before-upload="handleBeforeUpload"
-                            multiple
                             type="drag"
-                            action="/api/uploadGoods"
+                            :format="['jpg','jpeg','png']"
                             style="display: inline-block;width:58px;">
                         <div style="width: 58px;height:58px;line-height: 58px;">
                             <Icon type="camera" size="20"></Icon>
                         </div>
                     </Upload>
-                    <Modal title="查看图片" v-model="visible">
-                        <img :src="'' + imgName + '/large'" v-if="visible" style="width: 100%">
-                    </Modal>
                 </Form-item>
                 </Col>
             </Row>
             <Row type="flex" justify="center">
                 <Col span="10">
-                <Form-item label="库存数量：" porp="goods_number">
+                <Form-item label="库存数量：" prop="goods_number">
                     <Input v-model="formItem.goods_number" placeholder="请输入库存数量"></Input>
                 </Form-item>
                 </Col>
@@ -219,7 +215,6 @@
     export default{
         data() {
             return {
-                defaultList: [],
                 imgName: '',
                 visible: false,
                 uploadList: [],
@@ -275,6 +270,7 @@
         },
         mounted() {
             this._id = this.$route.query._id;
+            this.uploadList = this.$refs.upload.fileList;
             var _this = this;
             if (this._id) {
                 this.axios.post('/api/editGoods', {'_id': this._id})
@@ -298,6 +294,55 @@
             }
         },
         methods: {
+            handleView (name) {
+                this.visible = true;
+            },
+            handleRemove (file) {
+                // 从 upload 实例删除数据
+                console.log(file);
+                this.formItem.original_img.splice(this.formItem.goods_img.indexOf(file), 1);
+                this.formItem.goods_thumb.splice(this.formItem.goods_img.indexOf(file), 1);
+                this.formItem.goods_img.splice(this.formItem.goods_img.indexOf(file), 1);
+            },
+            handleFormatError (file) {
+                this.$Notice.warning({
+                    title: '文件格式不正确',
+                    desc: '文件 ' + file.name + ' 格式不正确，请上传 jpg 或 png 格式的图片。'
+                });
+            },
+            handleMaxSize (file) {
+                this.$Notice.warning({
+                    title: '超出文件大小限制',
+                    desc: '文件 ' + file.name + ' 太大，不能超过 2M。'
+                });
+            },
+            handleBeforeUpload () {
+                const check = this.uploadList.length < 5;
+                if (!check) {
+                    this.$Notice.warning({
+                        title: '最多只能上传 5 张图片。'
+                    });
+                }
+                return check;
+            },
+            handleSuccess (response, file) {
+                // 因为上传过程为实例，这里模拟添加 url
+                this.$Message.success(response.message);
+                file.url = response.img_box;
+                file.name = 'upload/goods/middle/' + response.img_box;
+                this.uploadList.push({
+                    'name': response.img_box,
+                    'url': 'upload/goods/middle/' + response.img_box
+                });
+
+                this.formItem.original_img.push('upload/images/' + response.img_box);
+                this.formItem.goods_img.push('upload/goods/middle/' + response.img_box);
+                this.formItem.goods_thumb.push('upload/goods/thumb/' + response.img_box);
+            },
+            handleError (error, file) {
+                // 因为上传过程为实例，这里模拟添加 url
+                this.$Message.error(error.message);
+            },
             handleReset (name) {
                 this.$refs[name].resetFields();
             },
@@ -345,41 +390,6 @@
                             console.log(error);
                         });
             },
-            handleView (name) {
-                this.imgName = name;
-                this.visible = true;
-            },
-            handleRemove (file) {
-                // 从 upload 实例删除数据
-                const fileList = this.$refs.upload.fileList;
-                this.$refs.upload.fileList.splice(fileList.indexOf(file), 1);
-            },
-            handleSuccess (res, file) {
-                // 因为上传过程为实例，这里模拟添加 url
-                file.url = 'https://o5wwk8baw.qnssl.com/7eb99afb9d5f317c912f08b5212fd69a/avatar';
-                file.name = '7eb99afb9d5f317c912f08b5212fd69a';
-            },
-            handleFormatError (file) {
-                this.$Notice.warning({
-                    title: '文件格式不正确',
-                    desc: '文件 ' + file.name + ' 格式不正确，请上传 jpg 或 png 格式的图片。'
-                });
-            },
-            handleMaxSize (file) {
-                this.$Notice.warning({
-                    title: '超出文件大小限制',
-                    desc: '文件 ' + file.name + ' 太大，不能超过 2M。'
-                });
-            },
-            handleBeforeUpload () {
-                const check = this.uploadList.length < 5;
-                if (!check) {
-                    this.$Notice.warning({
-                        title: '最多只能上传 5 张图片。'
-                    });
-                }
-                return check;
-            },
             submitData: function (path, that) {
                 that.axios.post(path, that.formItem)
                         .then(function (response) {
@@ -389,7 +399,6 @@
                                     if (that.$route.query._id) {
                                         that.$router.push('/goodsList');
                                     }
-                                    that.defaultList = [];
                                 });
                             } else {
                                 that.$Message.error(response.data.message, 1.5, function () {
@@ -443,22 +452,23 @@
             position relative
             box-shadow 0 1px 1px rgba(0,0,0,.2)
             margin-right 4px
+            &:hover
+                .demo-upload-list-cover
+                    display block
             img
                 width 100%
                 height 100%
-        .demo-upload-list-cover
-            display none
-            position absolute
-            top 0
-            bottom 0
-            left 0
-            right 0
-            background rgba(0,0,0,.6)
-        .demo-upload-listhover, .demo-upload-list-cover
-            display block
-            i
-                color #fff
-                font-size 20px
-                cursor pointer
-                margin 0 2px
+            .demo-upload-list-cover
+                display none
+                position absolute
+                top 0
+                bottom 0
+                left 0
+                right 0
+                background rgba(0,0,0,.6)
+                i
+                    color #fff
+                    font-size 20px
+                    cursor pointer
+                    margin 0 2px
 </style>

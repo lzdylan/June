@@ -3,14 +3,9 @@
  */
 var Goods = require("../junedb/goods.js");
 var muilter  = require('../multerUtil');
+var upload = muilter.single('goods_img');
 var gm = require('gm');
 var imageMagick = gm.subClass({ imageMagick : true });
-var original_img = '';
-var goods_thumb = '';
-var goods_img = '';
-var upload = muilter.single('original_img');
-var goods_req = null;
-var goods_res = null;
 exports.findGoods = function (request, response) {
     var dataCount = 0;
     var condition = '';
@@ -61,9 +56,6 @@ exports.editGoods = function (request, response) {
 exports.updateGoods = function (request, response) {
     var goodsData = request.body;
     goodsData.last_edit = Date.now();
-    goodsData.original_img.push(original_img);
-    goodsData.goods_thumb.push(goods_thumb);
-    goodsData.goods_img.push(goods_img);
     Goods.update({'goods_name': request.body.goods_name}, goodsData, function(err, desc){
         if (err) {
             response.json({
@@ -89,58 +81,22 @@ exports.addGoods = function (request, response) {
         }
         else {
             if(res.length === 0) {
-                upload(goods_req, goods_res, function (err) {
+                var goodsData = new Goods(request.body);
+                goodsData.save(function(err, desc){
                     if (err) {
-                        // 发生错误
                         response.json({
                             errno: 1,
-                            message: '上传失败!'
+                            message: '添加失败!',
+                            desc: desc
                         });
-                        return
                     }
-                    var path = goods_req.file.path;
-                    original_img = 'upload/images/'+goods_req.file.filename;
-                    goods_thumb = 'upload/goods/thumb/'+goods_req.file.filename;
-                    goods_img = 'upload/goods/middle/'+goods_req.file.filename;
-                    imageMagick(path)
-                        .resize(150, 150)
-                        .autoOrient()
-                        .write(goods_thumb, function(err){
-                            if (err) {
-                                console.log(err);
-                            }
+                    else {
+                        response.json({
+                            errno: 0,
+                            message: '添加成功!',
+                            desc: desc
                         });
-                    imageMagick(path)
-                        .resize(800, 800)
-                        .autoOrient()
-                        .write(goods_img, function(err){
-                            if (err) {
-                                console.log(err);
-                            }
-                        });
-                    var goodsData = new Goods(request.body);
-                    console.log(goods_req.file.filename);
-                    if(goods_req.file.filename !== '') {
-                        goodsData.original_img.push(original_img);
-                        goodsData.goods_thumb.push(goods_thumb);
-                        goodsData.goods_img.push(goods_img);
                     }
-                    goodsData.save(function(err, desc){
-                        if (err) {
-                            response.json({
-                                errno: 1,
-                                message: '添加失败!',
-                                desc: desc
-                            });
-                        }
-                        else {
-                            response.json({
-                                errno: 0,
-                                message: '添加成功!',
-                                desc: desc
-                            });
-                        }
-                    })
                 })
             }else {
                 response.json({
@@ -153,6 +109,32 @@ exports.addGoods = function (request, response) {
     })
 }
 exports.imgUpload = function (request, response) {
-    goods_req = request;
-    goods_res = response;
+    upload(request, response, function (err) {
+        if (err) {
+            // 发生错误
+            response.json({
+                errno: 1,
+                message: '上传失败!',
+                img_box: request.file.filename
+            });
+            return
+        }
+        creatImg(150, 150, request.file.path, 'upload/goods/thumb/'+request.file.filename);
+        creatImg(800, 800, request.file.path, 'upload/goods/middle/'+request.file.filename);
+        response.json({
+            errno: 0,
+            message: '上传成功!',
+            img_box: request.file.filename
+        });
+    })
+}
+function creatImg(width, height, path, name) {
+    imageMagick(path)
+        .resize(width, height)
+        .autoOrient()
+        .write(name, function(err){
+            if (err) {
+                console.log(err);
+            }
+        });
 }

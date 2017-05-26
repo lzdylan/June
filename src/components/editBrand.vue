@@ -1,5 +1,5 @@
 <template>
-    <div class="category">
+    <div class="brand">
         <h3>添加/编辑品牌<Button type="ghost" @click="brand"><Icon style="margin-right:10px" type="arrow-return-left"></Icon>返回列表</Button></h3>
         <Form ref="formItem" :model="formItem" :rules="ruleValidate" :label-width="180" enctype=‘multipart/form-data’>
             <Form-item label="品牌" prop="brand_name">
@@ -7,8 +7,9 @@
             </Form-item>
             <Form-item label="品牌LOGO" prop="brand_logo">
                 <Upload
-                        action="/api/uploadBrand"
+                        ref="upload"
                         name="brand_logo"
+                        action="/api/uploadBrand"
                         :max-size=2048
                         :default-file-list="defaultList"
                         :on-success="handleSuccess"
@@ -68,7 +69,6 @@
         methods: {
             handleSuccess (response, file) {
                 // 因为上传过程为实例，这里模拟添加 url
-                console.log(response);
                 this.$Message.success(response.message);
             },
             handleError (error, file) {
@@ -123,7 +123,7 @@
     };
 </script>
 <style lang="stylus" rel="stylesheet/stylus">
-    .category
+    .brand
         margin 0px auto
         h3
             line-height 35px
@@ -132,4 +132,8 @@
         form
             width 80%
             margin 10px auto
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            margin: 0 2px;
 </style>
