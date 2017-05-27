@@ -18,6 +18,7 @@ apiRouters.post('/removeGoodsType', GoodsType.removeGoodsType);
 apiRouters.post('/updateGoodsType', GoodsType.updateGoodsType);
 apiRouters.post('/editGoodsType', GoodsType.editGoodsType);
 apiRouters.post('/addGoodsType', GoodsType.addGoodsType);
+apiRouters.post('/uploadGoodsType', GoodsType.imgUpload);
 //商品分类
 apiRouters.post('/findCategory', Category.findCategory);
 apiRouters.post('/removeCategory', Category.removeCategory);

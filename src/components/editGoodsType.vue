@@ -15,6 +15,18 @@
                     <Option v-for="item in category" :value="item._id" :key="item" :label="item.cat_name"></Option>
                 </Select>
             </Form-item>
+            <Form-item label="类型LOGO" prop="type_logo">
+                <Upload
+                        action="/api/uploadGoodsType"
+                        name="type_logo"
+                        :max-size=2048
+                        :default-file-list="defaultList"
+                        :on-success="handleSuccess"
+                        :on-error="handleError"
+                        :format="['jpg','jpeg','png']">
+                    <Button type="ghost" icon="ios-cloud-upload-outline">上传文件</Button>
+                </Upload>
+            </Form-item>
             <Form-item label="是否显示" prop="is_show">
                 <i-switch v-model="formItem.is_show" size="large">
                     <span slot="open">是</span>
@@ -42,12 +54,14 @@
         data() {
             return {
                 _id: '',
+                defaultList: [],
                 category: [],
                 brands: [],
                 formItem: {
                     type_name: '',
                     is_show: true,
                     show_in_nav: false,
+                    type_logo: '',
                     cat_id: '',
                     cat_name: '',
                     brand_id: '',
@@ -91,6 +105,14 @@
             }
         },
         methods: {
+            handleSuccess (response, file) {
+                // 因为上传过程为实例，这里模拟添加 url
+                this.$Message.success(response.message);
+            },
+            handleError (error, file) {
+                // 因为上传过程为实例，这里模拟添加 url
+                this.$Message.error(error.message);
+            },
             handleReset (name) {
                 this.$refs[name].resetFields();
             },
@@ -134,6 +156,7 @@
                                 if (that.$route.query._id) {
                                     that.$router.push('/goodsType');
                                 }
+                                that.defaultList = [];
                             });
                         } else {
                             that.$Message.error(response.data.message, 1.5, function () {

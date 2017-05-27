@@ -26,6 +26,15 @@
                 },
                 columns: [
                     {
+                        title: '用户头像',
+                        key: 'user_avatar',
+                        width: 100,
+                        align: 'center',
+                        render (row, column, index) {
+                            return `<img width="40" style="margin:5px 0px 0px;" v-if="data[${index}]" :src="'upload/users/'+data[${index}].user_avatar">`;
+                        }
+                    },
+                    {
                         title: '昵称',
                         key: 'alias'
                     },

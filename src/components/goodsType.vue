@@ -11,6 +11,14 @@
                 self: this,
                 columns: [
                     {
+                        title: '类型图片',
+                        key: 'type_logo',
+                        align: 'center',
+                        render (row, column, index) {
+                            return `<img width="50" v-if="data[${index}]" :src="data[${index}].type_logo">`;
+                        }
+                    },
+                    {
                         title: '名称',
                         key: 'type_name'
                     },
