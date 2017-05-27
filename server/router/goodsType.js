@@ -2,6 +2,12 @@
  * Created by war3_2 on 2017/5/5.
  */
 var GoodsType = require("../junedb/goods_type.js");
+var muilter  = require('../multerUtil');
+var gm = require('gm');
+var imageMagick = gm.subClass({ imageMagick : true });
+var upload = muilter.single('type_logo');
+var type_logo = '';
+var path = '';
 
 exports.findGoodsType = function (request, response) {
     var condition = request.body.cat_id ? {'cat_id': request.body.cat_id} : {};
@@ -37,6 +43,8 @@ exports.editGoodsType = function (request, response) {
 exports.updateGoodsType = function (request, response) {
     var goodsType = request.body;
     goodsType.last_edit = Date.now();
+    creatImg();
+    goodsType.type_logo = type_logo;
     GoodsType.update({'_id': request.body._id}, goodsType, function(err, desc){
         if (err) {
             response.json({
@@ -61,7 +69,9 @@ exports.addGoodsType = function (request, response) {
         }
         else {
             if(res.length === 0) {
+                creatImg();
                 var goodsType = new GoodsType(request.body);
+                goodsType.type_logo = type_logo;
                 goodsType.save(function(err, desc){
                     if (err) {
                         response.json({
@@ -87,4 +97,32 @@ exports.addGoodsType = function (request, response) {
             }
         }
     })
+}
+exports.imgUpload = function (request, response) {
+    upload(request, response, function (err) {
+        if (err) {
+            // 发生错误
+            response.json({
+                errno: 1,
+                message: '上传失败!'
+            });
+            return
+        }
+        path = request.file.path;
+        type_logo = 'upload/goodsType/'+request.file.filename;
+        response.json({
+            errno: 0,
+            message: '上传成功!',
+        });
+    })
+}
+function creatImg() {
+    imageMagick(path)
+        .resize(150, 150)
+        .autoOrient()
+        .write(type_logo, function(err){
+            if (err) {
+                console.log(err);
+            }
+        });
 }
